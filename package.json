@@ -1,0 +1,17 @@
+{
+  "name": "salenty",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "watch": "gulp watch",
+    "build": "gulp build",
+    "build-prod": "gulp build-prod",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "tailwindcss": "^3.4.4"
+  }
+}

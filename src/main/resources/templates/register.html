@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../static/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+
+    <title>Register</title>
+</head>
+
+<body>
+<div class="container" id="container">
+    <div class="form-container sign-up-container">
+        <form th:action="@{/register}" method="post" th:object="${user}" autocomplete="off">
+            <h1>Hesap Oluştur</h1>
+            <input type="text" placeholder="Kullanıcı Adı" th:field="*{userName}" required aria-required="true"/>
+            <input type="email" placeholder="E-Posta" th:field="*{userEmail}" required aria-required="true"/>
+            <input type="tel" maxlength="11" placeholder="Telefon Numarası (0555 555 55 55)" th:field="*{userTel}"
+                   required aria-required="true"/>
+            <input type="password" placeholder="Parola" th:field="*{userPassword}" required aria-required="true"/>
+            <input type="text" placeholder="Adres" th:field="*{userAddress}" required aria-required="true"/>
+
+            <button>Kayıt Ol</button>
+
+        </form>
+    </div>
+    <div class="form-container sign-in-container">
+        <form th:action="@{/user-login}" method="post" th:object="${user}">
+            <h1>Giriş Yap</h1>
+            <input type="text" placeholder="Kullanıcı Adı" th:field="*{userName}" required aria-required="true"/>
+            <input type="password" placeholder="Parola" th:field="*{userPassword}" aria-required="true"/>
+            <button>Giriş Yap</button>
+            <br>
+        </form>
+    </div>
+    <div class="overlay-container">
+        <div class="overlay">
+            <div class="overlay-panel overlay-left">
+                <h1>Tekrar Hoş Geldiniz!</h1>
+                <p>Hesabınıza erişim sağlamak için bilgilerinizi girin</p>
+                <button class="ghost" id="signIn">Giriş Yap</button>
+            </div>
+            <div class="overlay-panel overlay-right">
+                <h1>Hoş Geldiniz!</h1>
+                <p>Aramıza katılmak için bilgilerinizi girin</p>
+                <button class="ghost" id="signUp">Kayıt Ol</button>
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const signUpButton = document.getElementById('signUp');
+    const signInButton = document.getElementById('signIn');
+    const container = document.getElementById('container');
+
+    signUpButton.addEventListener('click', () => {
+        container.classList.add("right-panel-active");
+    });
+
+    signInButton.addEventListener('click', () => {
+        container.classList.remove("right-panel-active");
+    });
+
+
+</script>
+
+</body>
+
+</html>
