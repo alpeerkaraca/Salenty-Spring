@@ -33,8 +33,10 @@
     <div class="form-container sign-in-container">
         <form th:action="@{/user-login}" method="post" th:object="${user}">
             <h1>Giriş Yap</h1>
+            <div th:if="${param.error}" class="alert alert-danger bg-red-400" role="alert">Kullanıcı adı veya parola hatalı!</div>
             <input type="text" placeholder="Kullanıcı Adı" th:field="*{userName}" required aria-required="true"/>
             <input type="password" placeholder="Parola" th:field="*{userPassword}" aria-required="true"/>
+
             <button>Giriş Yap</button>
             <br>
         </form>

@@ -20,7 +20,7 @@ public class User {
     @Column(nullable = false)
     private String userPassword;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 2000)
     private String userAddress;
 
     @Column(nullable = false, columnDefinition = "varchar(255) default 'user'")

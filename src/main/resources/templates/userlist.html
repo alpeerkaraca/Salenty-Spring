@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User List</title>
+</head>
+<body>
+<h1>User List</h1>
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Address</th>
+        <th>Phone</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Actions</th>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.userId}"></td>
+        <td th:text="${user.userName}"></td>
+        <td th:text="${user.userEmail}"></td>
+        <td th:text="${user.userAddress}"></td>
+        <td th:text="${user.userTel}"></td>
+        <td th:text="${user.userRole}"></td>
+        <td th:if="${user.userStatus} == false">Inactive</td>
+        <td th:if="${user.userStatus}">Active</td>
+        <td>
+            <a th:href="@{'/user/edit/' + ${user.userId}}">Edit</a>
+            <a th:href="@{'/user/delete/' + ${user.userId}}">Delete</a>
+        </td>
+
+    </tr>
+</table>
+
+</body>
+</html>

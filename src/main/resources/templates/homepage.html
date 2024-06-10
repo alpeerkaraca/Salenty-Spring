@@ -21,6 +21,7 @@
             }
         }
 
+
         document.addEventListener('click', function (event) {
             const drawerCart = document.getElementById('drawerCart');
             const cartIcon = document.getElementById('cartIcon');
@@ -570,9 +571,11 @@
                         <h3 class="text-sm text-gray-700">
                             <a href="#" th:text="${product.productName}">
                                 <span aria-hidden="true" class="absolute inset-0"></span>
-
                             </a>
+                            <br>
+                            <a class="text-sm text-gray-900" th:text="${product.sellerName}"></a>
                         </h3>
+
                     </div>
                     <p class="text-sm font-medium text-gray-900" th:text="${product.productPrice}"></p>
 
@@ -702,7 +705,8 @@
             </div>
             <div class="mt-10 xl:mt-0">
                 <h3 class="text-sm font-semibold leading-6 text-white">Bültenimize kaydol</h3>
-                <p class="mt-2 text-sm leading-6 text-gray-300">En güncel haberler, makaleler mail olarak gönderilecektir.</p>
+                <p class="mt-2 text-sm leading-6 text-gray-300">En güncel haberler, makaleler mail olarak
+                    gönderilecektir.</p>
                 <form class="mt-6 sm:flex sm:max-w-md">
                     <label for="email-address" class="sr-only">E-Posta</label>
                     <input type="email" name="email-address" id="email-address" autocomplete="email" required
@@ -758,7 +762,8 @@
                     </svg>
                 </a>
             </div>
-            <p class="mt-8 text-xs leading-5 text-gray-400 md:order-1 md:mt-0">&copy; 2024 Salenty, Tüm Hakları Saklıdır.</p>
+            <p class="mt-8 text-xs leading-5 text-gray-400 md:order-1 md:mt-0">&copy; 2024 Salenty, Tüm Hakları
+                Saklıdır.</p>
         </div>
     </div>
 </footer>

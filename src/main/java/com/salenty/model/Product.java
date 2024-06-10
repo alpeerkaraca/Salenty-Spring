@@ -6,7 +6,7 @@ import jakarta.persistence.*;
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long productId;
+    private int productId;
 
     @Column(nullable = false)
     private String productName;
@@ -23,17 +23,20 @@ public class Product {
     @Column(nullable = false)
     private int sellerId;
 
+    @Column
+    private String sellerName;
+
     @Column(nullable = false)
     private String productImage;
 
 
 
     // Getters and Setters
-    public Long getProductId() {
+    public int getProductId() {
         return productId;
     }
 
-    public void setProductId(Long productId) {
+    public void setProductId(int productId) {
         this.productId = productId;
     }
 
@@ -75,6 +78,14 @@ public class Product {
 
     public void setSellerId(int sellerId) {
         this.sellerId = sellerId;
+    }
+
+    public String getSellerName() {
+        return sellerName;
+    }
+
+    public void setSellerName(String sellerName) {
+        this.sellerName = sellerName;
     }
 
     public String getProductImage() {

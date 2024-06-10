@@ -2,9 +2,6 @@ package com.salenty.controllers;
 
 import com.salenty.model.User;
 import com.salenty.services.UserService;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -48,18 +45,6 @@ public class UserController {
         return "redirect:/login?error=true";
     }
 
-    @PostMapping("/admin-login")
-    public String adminLogin(User user) {
-        System.out.println("User: " + user.getUserName());
-        boolean isUserExist = userService.findByUserName(user.getUserName()) != null;
-        if (isUserExist && userService.findByUserName(user.getUserName()).getUserRole().equals("ADMIN")) {
-            User userFromDB = userService.findByUserName(user.getUserName());
-            if (userService.checkPassword(userFromDB, user.getUserPassword())) {
-                return "redirect:/admin";
-            }
-        }
-        return "redirect:/login?error=true";
-    }
 
 
 
