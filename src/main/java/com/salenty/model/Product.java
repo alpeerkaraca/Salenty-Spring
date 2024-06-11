@@ -1,12 +1,6 @@
 package com.salenty.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 
 
 @Entity(name = "Products")
@@ -31,9 +25,14 @@ public class Product {
     @Column(nullable = false)
     private String productImage;
 
+
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @OneToOne
+    @JoinColumn(name = "detail_id", nullable = false)
+    private ProductDetail productDetail;
 
     // Getters and Setters
     public int getProductId() {
@@ -90,6 +89,14 @@ public class Product {
     }
 
     public void setCategory(Category category) {
-        this.category = category;}
+        this.category = category;
+    }
 
+    public ProductDetail getProductDetail() {
+        return productDetail;
+    }
+
+    public void setProductDetail(ProductDetail productDetail) {
+        this.productDetail = productDetail;
+    }
 }
