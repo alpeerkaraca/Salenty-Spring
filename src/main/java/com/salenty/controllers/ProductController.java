@@ -1,12 +1,5 @@
 package com.salenty.controllers;
 
-import com.salenty.model.Product;
-import com.salenty.services.ProductService;
-import com.salenty.services.UserService;
-
-import java.util.ArrayList;
-
-import org.hibernate.mapping.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,15 +7,22 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.salenty.model.Product;
+import com.salenty.services.CategoryService;
+import com.salenty.services.ProductService;
+import com.salenty.services.UserService;
+
 @Controller()
 public class ProductController {
     @Autowired
     private ProductService productService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CategoryService categoryService;
 
     @GetMapping("/homepage")
-    public String home(Model model, Model userModel) {
+    public String home(Model model, Model userModel, Model categoryModel) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("Wait a sec, gettin products..");
         if (auth != null && auth.isAuthenticated()) {
@@ -39,6 +39,7 @@ public class ProductController {
 
             model.addAttribute("products", products);
             model.addAttribute("user", auth.getName());
+            model.addAttribute("categories", categoryService.getAllCategories());
             return "homepage";
         } else {
             return "redirect:/login";

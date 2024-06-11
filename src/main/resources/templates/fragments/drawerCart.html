@@ -1,42 +1,48 @@
 <!DOCTYPE html>
 <html lang="tr" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="UTF-8">
-    <title>Your Company</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8" />
+  <title>Your Company</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
+
 <body>
-              <form class="mx-auto max-w-2xl px-4">
-                <ul role="list" class="divide-y divide-gray-200">
-                  <li class="flex items-center py-6">
-                    <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg" alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt." class="h-16 w-16 flex-none rounded-md border border-gray-200">
-                    <div class="ml-4 flex-auto">
-                      <h3 class="font-medium text-gray-900">
-                        <a href="#">Throwback Hip Bag</a>
-                      </h3>
-                      <p class="text-gray-500">Salmon</p>
-                    </div>
-                  </li>
-                  <li class="flex items-center py-6">
-                    <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg" alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch." class="h-16 w-16 flex-none rounded-md border border-gray-200">
-                    <div class="ml-4 flex-auto">
-                      <h3 class="font-medium text-gray-900">
-                        <a href="#">Medium Stuff Satchel</a>
-                      </h3>
-                      <p class="text-gray-500">Blue</p>
-                    </div>
-                  </li>
+  <div th:fragment="drawerCart">
+    <form class="mx-auto max-w-2xl px-4">
+      <ul role="list" class="divide-y divide-gray-200">
+        <li class="flex items-center py-6">
+          <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-01.jpg" alt="Salmon orange fabric pouch with match zipper, gray zipper pull, and adjustable hip belt." class="h-16 w-16 flex-none rounded-md border border-gray-200" />
+          <div class="ml-4 flex-auto">
+            <h3 class="font-medium text-gray-900">
+              <a href="#">Throwback Hip Bag</a>
+            </h3>
+            <p class="text-gray-500">Salmon</p>
+          </div>
+        </li>
+        <li class="flex items-center py-6">
+          <img src="https://tailwindui.com/img/ecommerce-images/shopping-cart-page-04-product-02.jpg" alt="Front of satchel with blue canvas body, black straps and handle, drawstring top, and front zipper pouch." class="h-16 w-16 flex-none rounded-md border border-gray-200" />
+          <div class="ml-4 flex-auto">
+            <h3 class="font-medium text-gray-900">
+              <a href="#">Medium Stuff Satchel</a>
+            </h3>
+            <p class="text-gray-500">Blue</p>
+          </div>
+        </li>
 
-                  <!-- More products... -->
-                </ul>
+        <!-- More products... -->
+      </ul>
 
-                <button type="submit" class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">Checkout</button>
+      <button type="submit" class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
+        Checkout
+      </button>
 
-                <p class="mt-6 text-center">
-                  <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">View Shopping Bag</a>
-                </p>
-              </form>
-
+      <p class="mt-6 text-center">
+        <a href="#" class="text-sm font-medium text-indigo-600 hover:text-indigo-500">View Shopping Bag</a>
+      </p>
+    </form>
+  </div>
 
 </body>
+
 </html>
