@@ -17,29 +17,28 @@
 
                 <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
 
-
-                    <div th:each="product : ${products}" class="group relative">
-
-                        <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none lg:h-64">
+                    <div th:each="product : ${products}" class="group relative bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                        <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-t-md bg-gray-200 lg:aspect-none lg:h-64">
                             <img th:src="${product.productImage}" th:alt="${product.productName}" class="h-full w-full object-cover object-center lg:h-full lg:w-full">
                         </div>
-                        <div class="mt-4 flex justify-between">
+                        <div class="mt-4 p-4 flex justify-between">
                             <div>
                                 <h3 class="text-sm text-gray-700">
-                                    <a href="#" th:text="${product.productName}">
+                                    <a th:href="@{/product/{productId}(productId=${product.productId})}" th:text="${product.productName}">
                                         <span aria-hidden="true" class="absolute inset-0"></span>
                                     </a>
-                                    <br>
-                                    <a class="text-sm text-gray-900" th:text="${product.sellerName}"></a>
                                 </h3>
-
+                                <p class="mt-1 text-sm text-gray-500" th:text="${product.sellerName}"></p>
                             </div>
-                            <p class="text-sm font-medium text-gray-900" th:text="${product.productPrice}"></p>
-
+                            <p class="text-sm font-medium text-gray-900">
+                                <span th:text="${product.productPrice}"></span> ₺
+                            </p>
                         </div>
                     </div>
-                    </th:>
+
+
                 </div>
+
                 <nav class="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0 mt-10">
                     <div class="-mt-px flex w-0 flex-1">
                         <a href="#" class="inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
