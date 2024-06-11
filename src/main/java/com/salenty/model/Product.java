@@ -23,9 +23,6 @@ public class Product {
     private String productPrice;
 
     @Column(nullable = false)
-    private String productSpecs;
-
-    @Column(nullable = false)
     private int sellerId;
 
     @Column
@@ -63,13 +60,6 @@ public class Product {
         this.productPrice = productPrice;
     }
 
-    public String getProductSpecs() {
-        return productSpecs;
-    }
-
-    public void setProductSpecs(String productSpecs) {
-        this.productSpecs = productSpecs;
-    }
 
     public int getSellerId() {
         return sellerId;
