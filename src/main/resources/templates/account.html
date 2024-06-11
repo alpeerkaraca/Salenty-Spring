@@ -47,26 +47,26 @@ This example requires updating your template:
 
         <div class="fixed inset-0 flex">
             <!--
-              Off-canvas menu, show/hide based on off-canvas menu state.
+                Off-canvas menu, show/hide based on off-canvas menu state.
 
-              Entering: "transition ease-in-out duration-300 transform"
-                From: "-translate-x-full"
-                To: "translate-x-0"
-              Leaving: "transition ease-in-out duration-300 transform"
-                From: "translate-x-0"
-                To: "-translate-x-full"
-            -->
+                Entering: "transition ease-in-out duration-300 transform"
+                  From: "-translate-x-full"
+                  To: "translate-x-0"
+                Leaving: "transition ease-in-out duration-300 transform"
+                  From: "translate-x-0"
+                  To: "-translate-x-full"
+              -->
             <div class="relative mr-16 flex w-full max-w-xs flex-1">
                 <!--
-                    Close button, show/hide based on off-canvas menu state.
+                        Close button, show/hide based on off-canvas menu state.
 
-                    Entering: "ease-in-out duration-300"
-                      From: "opacity-0"
-                      To: "opacity-100"
-                    Leaving: "ease-in-out duration-300"
-                      From: "opacity-100"
-                      To: "opacity-0"
-                  -->
+                        Entering: "ease-in-out duration-300"
+                          From: "opacity-0"
+                          To: "opacity-100"
+                        Leaving: "ease-in-out duration-300"
+                          From: "opacity-100"
+                          To: "opacity-0"
+                      -->
                 <div class="absolute left-full top-0 flex w-16 justify-center pt-5">
                     <button type="button" class="-m-2.5 p-2.5">
                         <span class="sr-only">Close sidebar</span>
@@ -227,9 +227,9 @@ This example requires updating your template:
                             <li>
                                 <!-- Current: "bg-indigo-700 text-white", Default: "text-indigo-200 hover:text-white hover:bg-indigo-700" -->
                                 <a
-                                        href="orders"
-                                        class="bg-indigo-700 text-white group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link"
-                                        data-element="orders"
+                                        th:href="@{/account/orders}"
+                                        th:classappend="${section == 'orders'} ? 'bg-indigo-700 text-white' : 'text-indigo-200 hover:text-white hover:bg-indigo-700'"
+                                        class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                                 >
                                     <svg
                                             class="h-6 w-6 shrink-0 text-white"
@@ -250,9 +250,9 @@ This example requires updating your template:
                             </li>
                             <li>
                                 <a
-                                        href="users"
-                                        class="text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link"
-                                        data-element="users"
+                                        th:href="@{/account/users}"
+                                        th:classappend="${section == 'users'} ? 'bg-indigo-700 text-white' : 'text-indigo-200 hover:text-white hover:bg-indigo-700'"
+                                        class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                                 >
                                     <svg
                                             class="h-6 w-6 shrink-0 text-indigo-200 group-hover:text-white"
@@ -273,9 +273,9 @@ This example requires updating your template:
                             </li>
                             <li>
                                 <a
-                                        href="my-products"
-                                        class="text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link"
-                                        data-element="myproducts"
+                                        th:href="@{/account/myproducts}"
+                                        th:classappend="${section == 'myproducts'} ? 'bg-indigo-700 text-white' : 'text-indigo-200 hover:text-white hover:bg-indigo-700'"
+                                        class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                                 >
                                     <svg
                                             class="h-6 w-6 shrink-0 text-indigo-200 group-hover:text-white"
@@ -298,9 +298,9 @@ This example requires updating your template:
                     </li>
                     <li class="mt-auto">
                         <a
-                                href="settings"
-                                class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-indigo-200 hover:bg-indigo-700 hover:text-white sidebar-link"
-                                data-element="settings"
+                                th:href="@{/account/settings}"
+                                th:classappend="${section == 'settings'} ? 'bg-indigo-700 text-white' : 'text-indigo-200 hover:text-white hover:bg-indigo-700'"
+                                class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
                         >
                             <svg
                                     class="h-6 w-6 shrink-0 text-indigo-200 group-hover:text-white"
@@ -334,7 +334,6 @@ This example requires updating your template:
                 class="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8"
         >
             <button type="button" class="-m-2.5 p-2.5 text-gray-700 lg:hidden">
-                <span class="sr-only">Open sidebar</span>
                 <svg
                         class="h-6 w-6"
                         fill="none"
@@ -359,7 +358,7 @@ This example requires updating your template:
 
             <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
                 <form class="relative flex flex-1" action="#" method="GET">
-                    <label for="search-field" class="sr-only">Search</label>
+                    <label for="search-field" class="sr-only">Ara</label>
                     <svg
                             class="pointer-events-none absolute inset-y-0 left-0 h-full w-5 text-gray-400"
                             viewBox="0 0 20 20"
@@ -385,7 +384,7 @@ This example requires updating your template:
                             type="button"
                             class="-m-2.5 p-2.5 text-gray-400 hover:text-gray-500"
                     >
-                        <span class="sr-only">View notifications</span>
+                        <span class="sr-only">Sepeti Görüntüle</span>
                         <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
@@ -445,17 +444,17 @@ This example requires updating your template:
                         </button>
 
                         <!--
-                                Dropdown menu, show/hide based on menu state.
+                                        Dropdown menu, show/hide based on menu state.
 
-                                Entering: "transition ease-out duration-100"
-                                  From: "transform opacity-0 scale-95"
-                                  To: "transform opacity-100 scale-100"
-                                Leaving: "transition ease-in duration-75"
-                                  From: "transform opacity-100 scale-100"
-                                  To: "transform opacity-0 scale-95"
-                              -->
+                                        Entering: "transition ease-out duration-100"
+                                          From: "transform opacity-0 scale-95"
+                                          To: "transform opacity-100 scale-100"
+                                        Leaving: "transition ease-in duration-75"
+                                          From: "transform opacity-100 scale-100"
+                                          To: "transform opacity-0 scale-95"
+                                      -->
                         <div
-                                class="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none"
+                                class="absolute hidden right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 focus:outline-none"
                                 role="menu"
                                 aria-orientation="vertical"
                                 aria-labelledby="user-menu-button"
@@ -485,68 +484,39 @@ This example requires updating your template:
         </div>
 
         <main class="py-10">
+            <div
+                    th:if="${section.equals('users')}"
 
-            <div th:if="${request.equals('usr') }">
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        document.querySelector('.sidebar-link[data-element="users"]').classList.value = "bg-indigo-700 text-white group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
-                        document.querySelector('.sidebar-link[data-element="orders"]').classList.value = "text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
-                        document.querySelector('.sidebar-link[data-element="myproducts"]').classList.value = "text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
-                        document.querySelector('.sidebar-link[data-element="settings"]').classList.value = "text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
+            >
+                <div th:replace="~{fragments/userlist.html :: content}">
 
-                        <!-- Current: "bg-indigo-700 text-white", Default: "text-indigo-200 hover:text-white hover:bg-indigo-700" -->
-                    });
-                </script>
-                <div th:replace="fragments/userlist :: content">
                 </div>
             </div>
 
-            <div th:if="${request.equals('usr') }">
+            <div th:if="${section.equals('orders')}">
+                <div th:replace="~{fragments/orderlist.html :: content}">
 
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        document.querySelector('.sidebar-link[data-element="users"]').classList.value = "bg-indigo-700 text-white group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
-                        document.querySelector('.sidebar-link[data-element="orders"]').classList.value = "text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
-                        document.querySelector('.sidebar-link[data-element="myproducts"]').classList.value = "text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
-                        document.querySelector('.sidebar-link[data-element="settings"]').classList.value = "text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
-
-                        <!-- Current: "bg-indigo-700 text-white", Default: "text-indigo-200 hover:text-white hover:bg-indigo-700" -->
-                    });
-                </script>
-                <div th:replace="fragments/userlist :: content">
                 </div>
             </div>
 
-            <div th:if="${request.equals('prd') }">
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        document.querySelector('.sidebar-link[data-element="users"]').classList.value = "text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
-                        document.querySelector('.sidebar-link[data-element="orders"]').classList.value = "text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
-                        document.querySelector('.sidebar-link[data-element="myproducts"]').classList.value = "bg-indigo-700 text-white group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
-                        document.querySelector('.sidebar-link[data-element="settings"]').classList.value = "text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
+            <div
+                    th:if="${section.equals('myproducts')}"
 
-                        <!-- Current: "bg-indigo-700 text-white", Default: "text-indigo-200 hover:text-white hover:bg-indigo-700" -->
-                    });
-                </script>
-                <div th:replace="fragments/my-products :: content">
+            >
+                <div th:replace="~{fragments/myproducts.html :: content}">
+
                 </div>
             </div>
 
+            <div
+                    th:if="${section.equals('settings')}"
 
-            <div th:if="${request.equals('usr') }">
-                <script>
-                    document.addEventListener('DOMContentLoaded', function () {
-                        document.querySelector('.sidebar-link[data-element="users"]').classList.value = "bg-indigo-700 text-white group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
-                        document.querySelector('.sidebar-link[data-element="orders"]').classList.value = "text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
-                        document.querySelector('.sidebar-link[data-element="myproducts"]').classList.value = "text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
-                        document.querySelector('.sidebar-link[data-element="settings"]').classList.value = "text-indigo-200 hover:text-white hover:bg-indigo-700 group flex gap-x-3 rounded-md p-2 text-sm leading-6 font-semibold sidebar-link";
+            >
+                <div th:replace="~{fragments/settings.html :: content}">
 
-                        <!-- Current: "bg-indigo-700 text-white", Default: "text-indigo-200 hover:text-white hover:bg-indigo-700" -->
-                    });
-                </script>
-                <div th:replace="fragments/userlist :: content">
                 </div>
             </div>
+
         </main>
     </div>
 </div>

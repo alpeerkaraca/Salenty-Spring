@@ -3,19 +3,11 @@
         <div class="sm:flex sm:items-center">
             <div class="sm:flex-auto">
                 <h1 class="text-base font-semibold leading-6 text-gray-900">
-                    Kullanıcılar
+                    Ürünlerim
                 </h1>
                 <p class="mt-2 text-sm text-gray-700">
-                    Kayıtlı kullanıcıları görüntüleyin ve düzenleyin.
+                    Satışta olan ürünlerinizi listeleyin ve düzenleyin.
                 </p>
-            </div>
-            <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                <button
-                        type="button"
-                        class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                    Ekle
-                </button>
             </div>
         </div>
         <div class="-mx-4 mt-8 sm:-mx-0">
@@ -26,31 +18,25 @@
                             scope="col"
                             class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
                     >
-                        Kullanıcı Adı
+                        Ürün Adı
                     </th>
                     <th
                             scope="col"
                             class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
                     >
-                        Adres
+                        Fiyat
                     </th>
                     <th
                             scope="col"
                             class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
                     >
-                        E-Posta
+                        Açıklama
                     </th>
                     <th
                             scope="col"
                             class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
                     >
-                        Telefon
-                    </th>
-                    <th
-                            scope="col"
-                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                        Rol
+                        Kategori
                     </th>
                     <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
                         <span class="sr-only">Düzenle</span>
@@ -61,33 +47,29 @@
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                <tr th:each=" user : ${users}">
+                <tr th:each=" product : ${orders}">
                     <td
                             class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
-                            th:text="${user.userName}"
+                            th:text="${product.productName}"
                     ></td>
                     <td
                             class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:table-cell"
-                            th:text="${user.userAddress}"
+                            th:text="${product.productPrice}"
                     ></td>
                     <td
                             class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell"
-                            th:text="${user.userEmail}"
+                            th:text="${product.productDetail.productSpecs}"
                     ></td>
                     <td
                             class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
-                            th:text="${user.userTel}"
+                            th:text="${product.category.categoryName}"
                     ></td>
 
-                    <td
-                            class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
-                            th:text="${user.userRole}"
-                    ></td>
                     <td
                             class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"
                     >
                         <a
-                                th:href="@{/user/edit/{id} (id=${user.userId})}"
+                                th:href="@{/product/edit/{id} (id=${product.productId})}"
                                 class="text-indigo-600 hover:text-indigo-900"
                         >Düzenle<span class="sr-only"></span
                         ></a>
@@ -96,7 +78,7 @@
                             class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"
                     >
                         <a
-                                th:href="@{/user/delete/{id} (id=${user.userId})}"
+                                th:href="@{/product/delete/{id} (id=${product.productId})}"
                                 class="text-indigo-600 hover:text-indigo-900 delete-button"
                         >Sil<span class="sr-only"></span
                         ></a>
@@ -107,14 +89,22 @@
         </div>
     </div>
     <script>
-        document.querySelectorAll('.delete-button').forEach(function (button) {
-            button.addEventListener('click', function (event) {
-                event.preventDefault();
-                if (confirm('Bu kullanıcıyı silmek istediğinizden emin misiniz?')) {
-                    window.location.href = button.getAttribute('href');
-                }
+        document.addEventListener("DOMContentLoaded", function () {
+            const deleteButtons = document.querySelectorAll(".delete-button");
+
+            deleteButtons.forEach(function (button) {
+                button.addEventListener("click", function (event) {
+                    const confirmed = confirm(
+                        "Kullanıcıyı silmek istediğinize emin misiniz?"
+                    );
+                    if (!confirmed) {
+                        event.preventDefault();
+                    }
+                });
             });
         });
     </script>
 </div>
+
+
 

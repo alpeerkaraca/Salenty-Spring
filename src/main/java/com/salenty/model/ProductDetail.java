@@ -10,7 +10,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "product_details") // Doğru tablo adı burada belirtiliyor
+@Table(name = "product_details")
 public class ProductDetail {
 
   @Id
@@ -33,7 +33,7 @@ public class ProductDetail {
   private String productSpecs;
 
   @ManyToOne
-  @JoinColumn(name = "product_id", nullable = false)
+  @JoinColumn(name = "product_id", nullable = false, unique = true)
   private Product product;
 
   // Getters and Setters
