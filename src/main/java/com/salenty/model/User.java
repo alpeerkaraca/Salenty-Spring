@@ -2,7 +2,8 @@ package com.salenty.model;
 
 import jakarta.persistence.*;
 
-@Entity(name = "Users")
+@Entity(name = "User")
+@Table(name = "users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,8 +29,6 @@ public class User {
 
     @Column(nullable = false, columnDefinition = "boolean default true")
     private boolean userStatus;
-
-
 
     // Getters and Setters
     public Long getUserId() {
@@ -95,5 +94,4 @@ public class User {
     public void setUserStatus(boolean userStatus) {
         this.userStatus = userStatus;
     }
-
 }
