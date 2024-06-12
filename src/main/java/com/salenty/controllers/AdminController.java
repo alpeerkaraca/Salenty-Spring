@@ -27,18 +27,19 @@ public class AdminController {
     @GetMapping("/account/{section}")
     public String account(@PathVariable("section") String section, Model model) {
 
-        List<User> users = userService.getAllUsers();
-        List<Product> orders = productService.getAllProducts();
-
         switch (section) {
             case "users":
                 model.addAttribute("users", userService.getAllUsers());
                 break;
             case "myproducts":
-                model.addAttribute("orders", orders);
+                model.addAttribute("orders", productService.getAllProducts());
                 break;
             case "orders":
-                model.addAttribute("orders", orders);
+                model.addAttribute("orders", productService.getAllProducts());
+                break;
+            case "addProduct":
+                model.addAttribute("categories", categoryService.getAllCategories());
+                model.addAttribute("product", new Product());
 
                 break;
             case "settings":
@@ -47,6 +48,7 @@ public class AdminController {
                 model.addAttribute("section", "orders");
                 break;
         }
+
         return "account";
     }
 
