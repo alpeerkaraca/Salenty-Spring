@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="h-full">
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -7,29 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../static/output.css"/>
 </head>
-<body>
-<!--
-This example requires some changes to your config:
-
-```
-// tailwind.config.js
-module.exports = {
-// ...
-plugins: [
-// ...
-require('@tailwindcss/forms'),
-],
-}
-```
--->
-<!--
-This example requires updating your template:
-
-```
-<html class="h-full bg-white">
 <body class="h-full">
-```
--->
 <div>
     <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
     <div class="relative z-50 lg:hidden" role="dialog" aria-modal="true">
@@ -294,6 +272,28 @@ This example requires updating your template:
                                     Ürünlerim
                                 </a>
                             </li>
+                            <li>
+                                <a
+                                        th:href="@{/account/addProduct}"
+                                        th:classappend="${section == 'addProduct'} ? 'bg-indigo-700 text-white' : 'text-indigo-200 hover:text-white hover:bg-indigo-700'"
+                                        class="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6"
+                                >
+                                    <svg
+                                        class="h-6 w-6 shrink-0 text-indigo-200 group-hover:text-white"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke-width="1.5"
+                                        stroke="currentColor"
+                                        aria-hidden="true"
+
+                                    >
+                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                              d="M12 4.5v15m7.5-7.5h-15"/>
+                                    </svg>
+
+                                    Ürün Ekle
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="mt-auto">
@@ -494,7 +494,7 @@ This example requires updating your template:
             </div>
 
             <div th:if="${section.equals('orders')}">
-                <div th:replace="~{fragments/orderlist.html :: content}">
+                <div th:replace="~{fragments/order-list.html :: content}">
 
                 </div>
             </div>
@@ -503,7 +503,7 @@ This example requires updating your template:
                     th:if="${section.equals('myproducts')}"
 
             >
-                <div th:replace="~{fragments/myproducts.html :: content}">
+                <div th:replace="~{fragments/my-products.html :: content}">
 
                 </div>
             </div>
@@ -513,6 +513,15 @@ This example requires updating your template:
 
             >
                 <div th:replace="~{fragments/settings.html :: content}">
+
+                </div>
+            </div>
+
+            <div
+                    th:if="${section.equals('addProduct')}"
+
+            >
+                <div th:replace="~{fragments/add-product.html :: content}">
 
                 </div>
             </div>

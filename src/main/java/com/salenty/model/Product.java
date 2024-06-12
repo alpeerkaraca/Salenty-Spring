@@ -1,6 +1,7 @@
 package com.salenty.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 
 
 @Entity(name = "Products")
@@ -22,7 +23,8 @@ public class Product {
     @Column
     private String sellerName;
 
-    @Column(nullable = false)
+    @Column
+    @ColumnDefault("https://i.ibb.co/fQh9FQM/empty.png")
     private String productImage;
 
 

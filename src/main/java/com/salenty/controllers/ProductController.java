@@ -7,7 +7,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.salenty.model.*;
@@ -66,7 +71,8 @@ public class ProductController {
 
     @GetMapping("/product/{id}")
     public String getProductDetail(@PathVariable("id") int id, Model model) {
-        Product product = productService.getAllProducts().stream().filter(p -> p.getProductId() == id).findFirst().orElse(null);
+        Product product = productService.getAllProducts().stream().filter(p -> p.getProductId() == id).findFirst()
+                .orElse(null);
         ProductDetail productDetail = productDetailService.getProductDetailByProductId(id);
 
         if (product != null && productDetail != null) {
@@ -118,7 +124,24 @@ public class ProductController {
     
         return "redirect:/product/" + productId;
     }
-    
-    
+
+    @PostMapping("/addProduct")
+    public String addProduct(@ModelAttribute("product") Product product,
+            @RequestParam("coverImage") MultipartFile coverImage,
+            @RequestParam("firstImage") MultipartFile firstImage,
+            @RequestParam("secondImage") MultipartFile secondImage,
+            @RequestParam("thirdImage") MultipartFile thirdImage,
+            RedirectAttributes redirectAttributes) {
+        // Save product and images
+        try {
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+            productService.saveProduct(product, coverImage, auth, firstImage, secondImage, thirdImage);
+            redirectAttributes.addFlashAttribute("message", "Product added successfully!");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Error adding product: " + e.getMessage());
+        }
+        return "redirect:/account/myproducts";
+    }
     
 }

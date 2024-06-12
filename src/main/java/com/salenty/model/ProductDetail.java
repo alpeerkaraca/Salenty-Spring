@@ -8,6 +8,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
 @Table(name = "product_details")
@@ -24,9 +26,11 @@ public class ProductDetail {
   private String image1;
 
   @Column
+  @ColumnDefault("https://i.ibb.co/fQh9FQM/empty.png")
   private String image2;
 
   @Column
+  @ColumnDefault("https://i.ibb.co/fQh9FQM/empty.png")
   private String image3;
 
   @Column(nullable = false)
