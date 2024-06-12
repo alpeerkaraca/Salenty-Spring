@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <header th:replace="fragments/header :: header"></header>
+    <header th:insert="~{fragments/header :: header}"></header>
     <main>
         <div th:replace="fragments/categories :: categories"></div>
         <div th:replace="fragments/product :: product"></div>

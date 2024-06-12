@@ -1,19 +1,17 @@
 package com.salenty.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 
-import com.salenty.model.Product;
-import com.salenty.model.ProductDetail;
-import com.salenty.services.CategoryService;
-import com.salenty.services.ProductDetailService;
-import com.salenty.services.ProductService;
-import com.salenty.services.UserService;
+import com.salenty.model.*;
+import com.salenty.services.*;
 
 @Controller
 public class ProductController {
@@ -29,6 +27,9 @@ public class ProductController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private CartService cartService;
 
     @GetMapping("/homepage")
     public String home(Model model) {
@@ -78,7 +79,46 @@ public class ProductController {
             return "error/404"; // Not found page
         }
     }
-    
-    
 
+    @PostMapping("/add-to-cart/{productId}")
+    public String addToCart(@PathVariable("productId") int productId, Model model) {
+        User user = userService.findByUserName("alpeerkaracatest");
+        if (user != null) {
+            System.out.println("User found: " + user.getUserName());
+            Cart cart = cartService.getCartByUser(user);
+            if (cart == null) {
+                cart = new Cart();
+                cart.setUser(user);
+                cartService.saveCart(cart);
+            }
+    
+            Product product = productService.getAllProducts().stream()
+                    .filter(p -> p.getProductId() == productId)
+                    .findFirst()
+                    .orElse(null);
+            if (product != null) {
+                CartItem item = new CartItem();
+                item.setProduct(product);
+                item.setQuantity(1);
+                item.setCart(cart);
+                cartService.addItemToCart(cart, item);
+                System.out.println("Product added to cart: " + product.getProductName());
+            }
+    
+            // Sepet bilgilerini modele ekleme
+            cart = cartService.getCartByUser(user);
+            if (cart != null) {
+                model.addAttribute("cartItemCount", cart.getItems().size());
+            } else {
+                model.addAttribute("cartItemCount", 0);
+            }
+        } else {
+            System.err.println("User not found: alpeerkaracatest");
+        }
+    
+        return "redirect:/product/" + productId;
+    }
+    
+    
+    
 }
