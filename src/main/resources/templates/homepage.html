@@ -5,16 +5,25 @@
     <meta charset="UTF-8">
     <title>Homepage</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <title>Home</title>
+
 </head>
 
 <body>
-    <header th:insert="~{fragments/header :: header}"></header>
-    <main>
-        <div th:replace="fragments/categories :: categories"></div>
-        <div th:replace="fragments/product :: product"></div>
-        <!-- <div th:replace="fragments/drawercart :: drawercart"></div> -->
-    </main>
-    <footer th:replace="fragments/footer :: footer"></footer>
+<header th:insert="~{fragments/header :: header}"></header>
+<main>
+    <p th:text="${token}" id="token"> asdasd</p>
+    <div th:replace="~{fragments/categories :: categories}"></div>
+    <div th:replace="~{fragments/product :: product}"></div>
+    <!-- <div th:replace="fragments/drawercart :: drawercart"></div> -->
+</main>
+<footer th:replace="~{fragments/footer :: footer}"></footer>
+<script type="text/javascript">
+    // Store the JWT token in localStorage
+    const token = document.getElementById('token').innerHTML;
+    localStorage.setItem('jwtToken', token);
+    document.getElementById('token').remove();
+</script>
 </body>
 
 </html>

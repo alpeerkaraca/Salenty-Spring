@@ -15,4 +15,9 @@ public class ProductDetailService {
     public ProductDetail getProductDetailByProductId(int productId) {
         return productDetailRepository.findByProductProductId(productId);
     }
+
+    public Object getProductDetailById(int detailId) {
+        return productDetailRepository.findById(detailId);
+    }
+
 }

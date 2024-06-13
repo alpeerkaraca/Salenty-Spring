@@ -1,41 +1,36 @@
 package com.salenty.services;
 
+import com.salenty.model.Role;
 import com.salenty.model.User;
 import com.salenty.repositories.UserRepository;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserService {
-    @Autowired
-    private UserRepository userRepository;
+public class UserService implements UserDetailsService {
 
-    @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        this.userRepository = userRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 
     public void save(User user) {
-        user.setUserRole("USER");
-        user.setUserPassword(bCryptPasswordEncoder.encode(user.getUserPassword()));
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        user.setUserRole(Role.valueOf("USER"));
         userRepository.save(user);
     }
 
     public User findByUserName(String userName) {
-        return userRepository.findUsersByUserName(userName);
-    }
-
-    public int getUserId(String userName) {
-        return Math.toIntExact(userRepository.findUsersByUserName(userName).getUserId());
-    }
-
-    public boolean checkPassword(User user, String password) {
-        System.out.println("Password: " + password);
-        System.out.println("User Password: " + user.getUserPassword());
-        System.out.println("Matches: " + bCryptPasswordEncoder.matches(password, user.getUserPassword()));
-        return bCryptPasswordEncoder.matches(password, user.getUserPassword());
+        return userRepository.findUsersByUsername(userName);
     }
 
     public List<User> getAllUsers() {
@@ -48,5 +43,14 @@ public class UserService {
 
     public void deleteUser(int userId) {
         userRepository.deleteById((long) userId);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findUsersByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return user;
     }
 }

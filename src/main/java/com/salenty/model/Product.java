@@ -2,6 +2,9 @@ package com.salenty.model;
 
 import jakarta.persistence.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+import org.springframework.context.annotation.Lazy;
 
 
 @Entity(name = "Products")
@@ -9,7 +12,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int productId;
+    private Integer productId;
 
     @Column(nullable = false)
     private String productName;
@@ -24,7 +27,6 @@ public class Product {
     private String sellerName;
 
     @Column
-    @ColumnDefault("https://i.ibb.co/fQh9FQM/empty.png")
     private String productImage;
 
 
@@ -33,15 +35,16 @@ public class Product {
     private Category category;
 
     @OneToOne
-    @JoinColumn(name = "detail_id", nullable = false)
+    @JoinColumn(name = "detail_id")
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private ProductDetail productDetail;
 
     // Getters and Setters
-    public int getProductId() {
+    public Integer getProductId() {
         return productId;
     }
 
-    public void setProductId(int productId) {
+    public void setProductId(Integer productId) {
         this.productId = productId;
     }
 
@@ -100,5 +103,11 @@ public class Product {
 
     public void setProductDetail(ProductDetail productDetail) {
         this.productDetail = productDetail;
+    }
+
+    // Add a method to set ProductDetail
+    public void addProductDetail(ProductDetail productDetail) {
+        this.productDetail = productDetail;
+        productDetail.setProduct(this);
     }
 }

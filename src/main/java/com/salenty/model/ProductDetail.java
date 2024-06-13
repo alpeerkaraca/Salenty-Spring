@@ -9,92 +9,89 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.boot.context.properties.bind.DefaultValue;
 
 @Entity
 @Table(name = "product_details")
 public class ProductDetail {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private int detailId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int detailId;
 
-  @Column(nullable = false)
-  private String description;
+    @Column(nullable = false)
+    private String description;
 
-  @Column
-  private String image1;
+    @Column
+    private String image1;
 
-  @Column
-  @ColumnDefault("https://i.ibb.co/fQh9FQM/empty.png")
-  private String image2;
+    @Column
+    private String image2;
 
-  @Column
-  @ColumnDefault("https://i.ibb.co/fQh9FQM/empty.png")
-  private String image3;
+    @Column
+    private String image3;
 
-  @Column(nullable = false)
-  private String productSpecs;
+    @Column(nullable = false)
+    private String productSpecs;
 
-  @ManyToOne
-  @JoinColumn(name = "product_id", nullable = false, unique = true)
-  private Product product;
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = true, unique = true)
+    private Product product;
 
-  // Getters and Setters
+    // Getters and Setters
 
-  public int getDetailId() {
-    return detailId;
-  }
+    public int getDetailId() {
+        return detailId;
+    }
 
-  public void setDetailId(int detailId) {
-    this.detailId = detailId;
-  }
+    public void setDetailId(int detailId) {
+        this.detailId = detailId;
+    }
 
-  public String getDescription() {
-    return description;
-  }
+    public String getDescription() {
+        return description;
+    }
 
-  public void setDescription(String description) {
-    this.description = description;
-  }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-  public String getImage1() {
-    return image1;
-  }
+    public String getImage1() {
+        return image1;
+    }
 
-  public void setImage1(String image1) {
-    this.image1 = image1;
-  }
+    public void setImage1(String image1) {
+        this.image1 = image1;
+    }
 
-  public String getImage2() {
-    return image2;
-  }
+    public String getImage2() {
+        return image2;
+    }
 
-  public void setImage2(String image2) {
-    this.image2 = image2;
-  }
+    public void setImage2(String image2) {
+        this.image2 = image2;
+    }
 
-  public String getImage3() {
-    return image3;
-  }
+    public String getImage3() {
+        return image3;
+    }
 
-  public void setImage3(String image3) {
-    this.image3 = image3;
-  }
+    public void setImage3(String image3) {
+        this.image3 = image3;
+    }
 
-  public Product getProduct() {
-    return product;
-  }
+    public Product getProduct() {
+        return product;
+    }
 
-  public void setProduct(Product product) {
-    this.product = product;
-  }
+    public void setProduct(Product product) {
+        this.product = product;
+    }
 
-  public String getProductSpecs() {
-    return productSpecs;
-  }
+    public String getProductSpecs() {
+        return productSpecs;
+    }
 
-  public void setProductSpecs(String productSpecs) {
-    this.productSpecs = productSpecs;
-  }
+    public void setProductSpecs(String productSpecs) {
+        this.productSpecs = productSpecs;
+    }
 }
