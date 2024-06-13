@@ -1,16 +1,23 @@
 package com.salenty.model;
 
+import com.salenty.model.Role;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity(name = "User")
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long userId;
+    private Integer userId;
 
     @Column(nullable = false, unique = true)
-    private String userName;
+    private String username;
 
     @Column(nullable = false, unique = true)
     private String userEmail;
@@ -19,32 +26,28 @@ public class User {
     private String userTel;
 
     @Column(nullable = false)
-    private String userPassword;
+    private String password;
 
     @Column(nullable = false, length = 2000)
     private String userAddress;
 
-    @Column(nullable = false, columnDefinition = "varchar(255) default 'user'")
-    private String userRole;
+    @Enumerated(value = EnumType.STRING)
+    Role userRole;
 
-    @Column(nullable = false, columnDefinition = "boolean default true")
-    private boolean userStatus;
-
-    // Getters and Setters
-    public Long getUserId() {
+    public Integer getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
     public String getUserName() {
-        return userName;
+        return username;
     }
 
     public void setUserName(String userName) {
-        this.userName = userName;
+        this.username = userName;
     }
 
     public String getUserEmail() {
@@ -63,14 +66,6 @@ public class User {
         this.userTel = userTel;
     }
 
-    public String getUserPassword() {
-        return userPassword;
-    }
-
-    public void setUserPassword(String userPassword) {
-        this.userPassword = userPassword;
-    }
-
     public String getUserAddress() {
         return userAddress;
     }
@@ -79,19 +74,56 @@ public class User {
         this.userAddress = userAddress;
     }
 
-    public String getUserRole() {
+    public Role getUserRole() {
         return userRole;
     }
 
-    public void setUserRole(String userRole) {
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(userRole.name()));
+    }
+
+    public void setUserRole(Role userRole) {
         this.userRole = userRole;
     }
 
-    public boolean getUserStatus() {
-        return userStatus;
-    }
 
-    public void setUserStatus(boolean userStatus) {
-        this.userStatus = userStatus;
-    }
 }

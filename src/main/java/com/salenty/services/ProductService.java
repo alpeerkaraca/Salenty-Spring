@@ -1,8 +1,7 @@
 package com.salenty.services;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.salenty.model.Product;
-import com.salenty.repositories.CategoryRepository;
+import com.salenty.model.ProductDetail;
 import com.salenty.repositories.ProductDetailRepository;
 import com.salenty.repositories.ProductRepository;
 import org.json.JSONObject;
@@ -17,7 +16,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,6 +34,8 @@ public class ProductService {
 
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private ProductDetailService productDetailService;
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -51,39 +51,28 @@ public class ProductService {
 
     public void saveProduct(Product product, MultipartFile coverImage, Authentication auth, MultipartFile... images)
             throws Exception {
-        // Save the product details in the database
+        // Set the seller details
         product.setSellerId(1);
-        product.setSellerName(userService.getUserById(product.getSellerId()).getUserName());
+        product.setSellerName(userService.getUserById(product.getSellerId()).getUsername());
+
+        // Set the category name
         product.getCategory().setCategoryName(categoryService.getCategoryById(product.getCategory().getCategoryId()));
-        product.setProductId(productRepository.findAll().size() + 1);
 
-        System.out.println(
-                "İSTEK ALINDI \n" +
-                        "Product Specs \n " +
-                        "Product Name: " + product.getProductName() +
-                        "\n Product ID: " + product.getProductId() +
-                        "\n Product Price: " + product.getProductPrice() +
-                        "\n Seller ID: " + product.getSellerId() +
-                        "\n Seller Name: " + product.getSellerName() +
-                        "\n Product Image: " + product.getProductImage() +
-                        "\n Categories" +
-                        "\n CategoryID: " + product.getCategory().getCategoryId() +
-                        "\n CategoryName: " + product.getCategory().getCategoryName() +
-                        "\n Product Detail:" +
-                        "\n DetailID: " + product.getProductDetail().getDetailId() +
-                        "\n Product Detail: " + product.getProductDetail().getDescription() +
-                        "\n Product Specs: " + product.getProductDetail().getProductSpecs() +
-                        "\n Image 1: " + product.getProductDetail().getImage1() +
-                        "\n Image 2: " + product.getProductDetail().getImage2() +
-                        "\n Image 3: " + product.getProductDetail().getImage3());
+        // Create a new ProductDetail and set its fields
+        ProductDetail productDetail = new ProductDetail();
+        productDetail.setDescription("Default Description");
+        productDetail.setProductSpecs("Default Specs");
 
-        // productRepository.save(product);
-        System.out.println("Cover Image Yükleniyor...");
-        // Upload the cover image to imgbb.com and set the URL
+        // Set the Product for the ProductDetail
+        product.setProductDetail(productDetail);
+
+        // Upload the cover image and set the URL
         if (!coverImage.isEmpty()) {
             String coverImageUrl = uploadImage(coverImage);
             System.out.println("Cover Image Yüklendi: " + coverImageUrl);
             product.setProductImage(coverImageUrl);
+        } else {
+            product.setProductImage(DEFAULT_IMAGE_URL);
         }
 
         // Upload other images and set their URLs
@@ -92,19 +81,19 @@ public class ProductService {
                 if (!images[i].isEmpty()) {
                     String imageUrl = uploadImage(images[i]);
                     if (i == 0) {
-                        product.getProductDetail().setImage1(imageUrl);
+                        productDetail.setImage1(imageUrl);
                     } else if (i == 1) {
-                        product.getProductDetail().setImage2(imageUrl);
+                        productDetail.setImage2(imageUrl);
                     } else if (i == 2) {
-                        product.getProductDetail().setImage3(imageUrl);
+                        productDetail.setImage3(imageUrl);
                     }
                 } else {
                     if (i == 0) {
-                        product.getProductDetail().setImage1(DEFAULT_IMAGE_URL);
+                        productDetail.setImage1(DEFAULT_IMAGE_URL);
                     } else if (i == 1) {
-                        product.getProductDetail().setImage2(DEFAULT_IMAGE_URL);
+                        productDetail.setImage2(DEFAULT_IMAGE_URL);
                     } else if (i == 2) {
-                        product.getProductDetail().setImage3(DEFAULT_IMAGE_URL);
+                        productDetail.setImage3(DEFAULT_IMAGE_URL);
                     }
                 }
             }
@@ -113,39 +102,30 @@ public class ProductService {
         // Ensure all image fields are set to default if not provided
         if (images == null || images.length < 3) {
             if (images == null || images.length == 0 || images[0].isEmpty()) {
-                product.getProductDetail().setImage1(DEFAULT_IMAGE_URL);
+                productDetail.setImage1(DEFAULT_IMAGE_URL);
             }
             if (images == null || images.length < 2 || images[1].isEmpty()) {
-                product.getProductDetail().setImage2(DEFAULT_IMAGE_URL);
+                productDetail.setImage2(DEFAULT_IMAGE_URL);
             }
             if (images == null || images.length < 3 || images[2].isEmpty()) {
-                product.getProductDetail().setImage3(DEFAULT_IMAGE_URL);
+                productDetail.setImage3(DEFAULT_IMAGE_URL);
             }
         }
 
-        System.out.println(
-                "KAYIT TEST \n" +
-                        "Product Specs \n " +
-                        "Product Name: " + product.getProductName() +
-                        "\n Product ID: " + product.getProductId() +
-                        "\n Product Price: " + product.getProductPrice() +
-                        "\n Seller ID: " + product.getSellerId() +
-                        "\n Seller Name: " + product.getSellerName() +
-                        "\n Product Image: " + product.getProductImage() +
-                        "\n Categories" +
-                        "\n CategoryID: " + product.getCategory().getCategoryId() +
-                        "\n CategoryName: " + product.getCategory().getCategoryName() +
-                        "\n Product Detail:" +
-                        "\n DetailID: " + product.getProductDetail().getDetailId() +
-                        "\n Product Detail: " + product.getProductDetail().getDescription() +
-                        "\n Product Specs: " + product.getProductDetail().getProductSpecs() +
-                        "\n Image 1: " + product.getProductDetail().getImage1() +
-                        "\n Image 2: " + product.getProductDetail().getImage2() +
-                        "\n Image 3: " + product.getProductDetail().getImage3());
+        // Set the Product for the ProductDetail
+        productDetail.setProduct(product);
+        productDetail.getProduct().setProductId(product.getProductId());
+        productDetail.setProduct(product);
 
-        productDetailRepository.save(product.getProductDetail());
+        // Save the ProductDetail first
+        productDetailRepository.save(productDetail);
+
+        // Save the Product
         productRepository.save(product);
+
+        System.out.println("Product and ProductDetail saved successfully.");
     }
+
 
     private String uploadImage(MultipartFile image) throws IOException {
         String uploadUrl = "https://api.imgbb.com/1/upload";
@@ -173,4 +153,7 @@ public class ProductService {
         return jsonObject.getJSONObject("data").getString("url");
     }
 
+    public Product getProductById(int id) {
+        return productRepository.findById(id).orElse(null);
+    }
 }
