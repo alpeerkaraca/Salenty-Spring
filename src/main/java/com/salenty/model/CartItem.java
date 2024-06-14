@@ -1,6 +1,8 @@
 package com.salenty.model;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity(name = "CartItem")
 @Table(name = "cart_items")
@@ -10,12 +12,13 @@ public class CartItem {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartItemId;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "cart_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "cart_id")
     private Cart cart;
 
+
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id")
     private Product product;
 
     @Column(nullable = false)
