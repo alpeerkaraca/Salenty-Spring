@@ -28,6 +28,9 @@ public class CartService {
 
     @Transactional
     public void addItemToCart(Cart cart, CartItem item) {
+        if (cart.getItems() == null) {
+            cart.setItems(new java.util.ArrayList<>());
+        }
         cart.getItems().add(item);
         cartItemRepository.save(item);
         cartRepository.save(cart);

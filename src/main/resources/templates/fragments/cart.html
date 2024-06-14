@@ -12,10 +12,13 @@
   <div th:fragment="header" th:include="::header"></div>
   <div class="container mx-auto mt-8">
     <h1 class="text-2xl font-bold mb-4">Sepetiniz</h1>
-    <div th:if="${cartItems.size() == 0}">
+    <div th:if="${cartItems == null}">
       <p>Sepetinizde ürün bulunmamaktadır.</p>
     </div>
-    <div th:if="${cartItems.size() > 0}">
+    <div th:if="${cartItems != null && cartItems.size() == 0}">
+      <p>Sepetinizde ürün bulunmamaktadır.</p>
+    </div>
+    <div th:if="${cartItems != null && cartItems.size() > 0}">
       <table class="min-w-full bg-white">
         <thead>
           <tr>

@@ -19,7 +19,7 @@
                         <form
                                 class="md:col-span-2"
                                 autocomplete="off"
-                                th:action="@{/update-user/{id}(id=${user.userId})}"
+                                th:action="@{/update-me}"
                                 th:object="${user}"
                                 method="post"
                         >
@@ -110,7 +110,7 @@
 
                                 <div class="col-span-full">
                                     <label
-                                            for="userPassword"
+                                            for="userpassword"
                                             class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
                                     >Parola
                                     </label>
@@ -118,8 +118,8 @@
                                             class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md"
                                     >
                                         <input
-                                                id="userPassword"
-                                                th:field="*{userPassword}"
+                                                id="userpassword"
+                                                th:field="*{password}"
                                                 type="password"
                                                 autocomplete="password"
                                                 placeholder="***********************"

@@ -31,22 +31,29 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.formLogin(formLogin ->
-                        formLogin.loginPage("/login")
-                                .permitAll())
+        return http.formLogin(formLogin -> formLogin.loginPage("/login")
+                        .successForwardUrl("/homepage")
+                .permitAll())
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/register", "/logout", "/product/**", "/productDetail/**", "/homepage").permitAll()
+                        .requestMatchers("/register", "/logout", "/product/**", "/productDetail/**", "/homepage")
+                        .permitAll()
+                        .requestMatchers("/account/users", "account/allProducts")
+                        .hasAuthority("ADMIN")
+                        .requestMatchers("/account/orders", "/account/myproducts", "/account/addProduct")
+                        .hasAnyAuthority("SELLER", "ADMIN")
                         .anyRequest().authenticated())
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/login")
+                        .clearAuthentication(true)
+                        .deleteCookies("JSESSIONID", "token")
+                        .permitAll())
                 .userDetailsService(userService).build();
 
-
     }
-
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 }

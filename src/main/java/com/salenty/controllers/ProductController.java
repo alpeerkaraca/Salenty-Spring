@@ -1,5 +1,6 @@
 package com.salenty.controllers;
 
+import com.salenty.model.Product;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -27,7 +28,8 @@ public class ProductController {
 
     @PostMapping("/add-to-cart/{productId}")
     public String addToCart(@PathVariable("productId") int productId, Model model) {
-        User user = userService.findByUserName("alpeerkaracatest");
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByUserName(auth.getName());
         if (user != null) {
             System.out.println("User found: " + user.getUsername());
             Cart cart = cartService.getCartByUser(user);
@@ -37,7 +39,7 @@ public class ProductController {
                 cartService.saveCart(cart);
             }
 
-            Product product = productService.getAllProducts().stream().filter(p -> p.getProductId() == productId).findFirst().orElse(null);
+            Product product = productService.getProductById(productId);
             if (product != null) {
                 CartItem item = new CartItem();
                 item.setProduct(product);
@@ -55,22 +57,16 @@ public class ProductController {
                 model.addAttribute("cartItemCount", 0);
             }
         } else {
-            System.err.println("User not found: alpeerkaracatest");
+            System.err.println("User not found: " + user.getUserName());
         }
 
         return "redirect:/product/" + productId;
     }
 
     @PostMapping("/addProduct")
-    public String addProduct(@ModelAttribute("product") Product product, @RequestParam("coverImage") MultipartFile coverImage, @RequestParam("firstImage") MultipartFile firstImage, @RequestParam("secondImage") MultipartFile secondImage, @RequestParam("thirdImage") MultipartFile thirdImage) {
-        // Save product and images
-        try {
-            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public String addProduct(@ModelAttribute("product") Product product, @RequestParam("coverImage") MultipartFile coverImage, @RequestParam("firstImage") MultipartFile firstImage, @RequestParam("secondImage") MultipartFile secondImage, @RequestParam("thirdImage") MultipartFile thirdImage) throws Exception {
 
-            productService.saveProduct(product, coverImage, auth, firstImage, secondImage, thirdImage);
-        } catch (Exception e) {
-            System.err.println("Error while saving product: " + e.getMessage());
-        }
+        productService.saveProduct(product, coverImage, firstImage, secondImage, thirdImage);
         return "redirect:/account/myproducts";
     }
 
