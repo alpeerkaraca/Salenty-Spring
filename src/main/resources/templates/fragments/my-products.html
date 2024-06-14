@@ -47,29 +47,29 @@
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                <tr th:each=" product : ${orders}">
+                <tr th:each=" order : ${orders}">
                     <td
                             class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
-                            th:text="${product.productName}"
+                            th:text="${order.productName}"
                     ></td>
                     <td
                             class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:table-cell"
-                            th:text="${product.productPrice}"
+                            th:text="${order.productPrice}"
                     ></td>
                     <td
                             class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell overflow-auto"
-                            th:text="${product.productDetail.productSpecs.length() > 50 ? product.productDetail.productSpecs.substring(0, 50) + '...' : product.productDetail.productSpecs}"
+                            th:text="${order.productSpecs.length() > 50 ? order.productSpecs.substring(0, 50) + '...' : order.productSpecs}"
                     ></td>
                     <td
                             class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
-                            th:text="${product.category.categoryName}"
+                            th:text="${order.category.categoryName}"
                     ></td>
 
                     <td
                             class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"
                     >
                         <a
-                                th:href="@{/product/edit/{id} (id=${product.productId})}"
+                                th:href="@{/product/edit/{id} (id=${order.productId})}"
                                 class="text-indigo-600 hover:text-indigo-900"
                         >Düzenle<span class="sr-only"></span
                         ></a>
@@ -78,7 +78,7 @@
                             class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"
                     >
                         <a
-                                th:href="@{/product/delete/{id} (id=${product.productId})}"
+                                th:href="@{/product/delete/{id} (id=${order.productId})}"
                                 class="text-indigo-600 hover:text-indigo-900 delete-button"
                         >Sil<span class="sr-only"></span
                         ></a>

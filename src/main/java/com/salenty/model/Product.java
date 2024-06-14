@@ -1,10 +1,6 @@
 package com.salenty.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
-import org.springframework.context.annotation.Lazy;
 
 
 @Entity(name = "Products")
@@ -12,7 +8,7 @@ public class Product {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer productId;
+    private java.lang.Integer productId;
 
     @Column(nullable = false)
     private String productName;
@@ -20,26 +16,54 @@ public class Product {
     @Column(nullable = false)
     private String productPrice;
 
+    @JoinColumn(name = "user_id", nullable = false)
     @Column(nullable = false)
     private int sellerId;
 
+    @JoinColumn(name = "username", nullable = false)
     @Column
     private String sellerName;
 
     @Column
     private String productImage;
 
-
     @ManyToOne
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @OneToOne
-    @JoinColumn(name = "detail_id")
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    private ProductDetail productDetail;
+    @Column(nullable = false)
+    private String productDescription;
 
-    // Getters and Setters
+    @Column
+    private String productImage1;
+
+    @Column
+    private String productImage2;
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId=" + productId +
+                ", productName='" + productName + '\'' +
+                ", productPrice='" + productPrice + '\'' +
+                ", sellerId=" + sellerId +
+                ", sellerName='" + sellerName + '\'' +
+                ", productImage='" + productImage + '\'' +
+                ", category=" + category +
+                ", productDescription='" + productDescription + '\'' +
+                ", productImage1='" + productImage1 + '\'' +
+                ", productImage2='" + productImage2 + '\'' +
+                ", productImage3='" + productImage3 + '\'' +
+                ", productSpecs='" + productSpecs + '\'' +
+                '}';
+    }
+
+    @Column
+    private String productImage3;
+
+    @Column(nullable = false)
+    private String productSpecs;
+
     public Integer getProductId() {
         return productId;
     }
@@ -63,7 +87,6 @@ public class Product {
     public void setProductPrice(String productPrice) {
         this.productPrice = productPrice;
     }
-
 
     public int getSellerId() {
         return sellerId;
@@ -97,17 +120,43 @@ public class Product {
         this.category = category;
     }
 
-    public ProductDetail getProductDetail() {
-        return productDetail;
+    public String getProductDescription() {
+        return productDescription;
     }
 
-    public void setProductDetail(ProductDetail productDetail) {
-        this.productDetail = productDetail;
+    public void setProductDescription(String productDescription) {
+        this.productDescription = productDescription;
     }
 
-    // Add a method to set ProductDetail
-    public void addProductDetail(ProductDetail productDetail) {
-        this.productDetail = productDetail;
-        productDetail.setProduct(this);
+    public String getProductImage1() {
+        return productImage1;
+    }
+
+    public void setProductImage1(String productImage1) {
+        this.productImage1 = productImage1;
+    }
+
+    public String getProductImage2() {
+        return productImage2;
+    }
+
+    public void setProductImage2(String productImage2) {
+        this.productImage2 = productImage2;
+    }
+
+    public String getProductImage3() {
+        return productImage3;
+    }
+
+    public void setProductImage3(String productImage3) {
+        this.productImage3 = productImage3;
+    }
+
+    public String getProductSpecs() {
+        return productSpecs;
+    }
+
+    public void setProductSpecs(String productSpecs) {
+        this.productSpecs = productSpecs;
     }
 }

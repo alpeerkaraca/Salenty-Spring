@@ -1,14 +1,13 @@
 package com.salenty.services;
 
 import com.salenty.model.Product;
-import com.salenty.model.ProductDetail;
-import com.salenty.repositories.ProductDetailRepository;
 import com.salenty.repositories.ProductRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -23,19 +22,15 @@ public class ProductService {
     private static final String DEFAULT_IMAGE_URL = "https://i.ibb.co/fQh9FQM/empty.png";
     private final String IMGBB_API_KEY = "26f39d2645c430852c778370d45eb13f";
 
-    @Autowired
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
+    private final UserService userService;
+    private final CategoryService categoryService;
 
-    @Autowired
-    private ProductDetailRepository productDetailRepository;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private ProductDetailService productDetailService;
+    public ProductService(ProductRepository productRepository, UserService userService, CategoryService categoryService) {
+        this.productRepository = productRepository;
+        this.userService = userService;
+        this.categoryService = categoryService;
+    }
 
     public List<Product> getAllProducts() {
         return productRepository.findAll();
@@ -49,22 +44,25 @@ public class ProductService {
         productRepository.deleteById(productId);
     }
 
-    public void saveProduct(Product product, MultipartFile coverImage, Authentication auth, MultipartFile... images)
-            throws Exception {
-        // Set the seller details
-        product.setSellerId(1);
-        product.setSellerName(userService.getUserById(product.getSellerId()).getUsername());
+    public void deleteProductsByUserId(int userId) {
+        List<Product> products = productRepository.findBySellerId(userId);
+        for (Product product : products) {
+            productRepository.deleteById(product.getProductId());
+        }
+    }
 
-        // Set the category name
+    public void saveProduct(Product product, MultipartFile coverImage, MultipartFile... images)
+            throws Exception {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        // Satıcı ID ve Adını tanımla
+        product.setSellerId(userService.findByUserName(auth.getName()).getUserId());
+        product.setSellerName(auth.getName());
+
+        // Kategori Adını tanımla
         product.getCategory().setCategoryName(categoryService.getCategoryById(product.getCategory().getCategoryId()));
 
-        // Create a new ProductDetail and set its fields
-        ProductDetail productDetail = new ProductDetail();
-        productDetail.setDescription("Default Description");
-        productDetail.setProductSpecs("Default Specs");
 
-        // Set the Product for the ProductDetail
-        product.setProductDetail(productDetail);
 
         // Upload the cover image and set the URL
         if (!coverImage.isEmpty()) {
@@ -81,19 +79,19 @@ public class ProductService {
                 if (!images[i].isEmpty()) {
                     String imageUrl = uploadImage(images[i]);
                     if (i == 0) {
-                        productDetail.setImage1(imageUrl);
+                        product.setProductImage1(imageUrl);
                     } else if (i == 1) {
-                        productDetail.setImage2(imageUrl);
+                        product.setProductImage2(imageUrl);
                     } else if (i == 2) {
-                        productDetail.setImage3(imageUrl);
+                        product.setProductImage3(imageUrl);
                     }
                 } else {
                     if (i == 0) {
-                        productDetail.setImage1(DEFAULT_IMAGE_URL);
+                        product.setProductImage1(DEFAULT_IMAGE_URL);
                     } else if (i == 1) {
-                        productDetail.setImage2(DEFAULT_IMAGE_URL);
+                        product.setProductImage2(DEFAULT_IMAGE_URL);
                     } else if (i == 2) {
-                        productDetail.setImage3(DEFAULT_IMAGE_URL);
+                        product.setProductImage3(DEFAULT_IMAGE_URL);
                     }
                 }
             }
@@ -102,28 +100,21 @@ public class ProductService {
         // Ensure all image fields are set to default if not provided
         if (images == null || images.length < 3) {
             if (images == null || images.length == 0 || images[0].isEmpty()) {
-                productDetail.setImage1(DEFAULT_IMAGE_URL);
+                product.setProductImage1(DEFAULT_IMAGE_URL);
             }
             if (images == null || images.length < 2 || images[1].isEmpty()) {
-                productDetail.setImage2(DEFAULT_IMAGE_URL);
+                product.setProductImage2(DEFAULT_IMAGE_URL);
             }
             if (images == null || images.length < 3 || images[2].isEmpty()) {
-                productDetail.setImage3(DEFAULT_IMAGE_URL);
+                product.setProductImage3(DEFAULT_IMAGE_URL);
             }
         }
-
-        // Set the Product for the ProductDetail
-        productDetail.setProduct(product);
-        productDetail.getProduct().setProductId(product.getProductId());
-        productDetail.setProduct(product);
-
-        // Save the ProductDetail first
-        productDetailRepository.save(productDetail);
-
+//        Print the product
+        System.out.println(product.toString());
         // Save the Product
         productRepository.save(product);
 
-        System.out.println("Product and ProductDetail saved successfully.");
+        System.out.println("Product saved successfully.");
     }
 
 

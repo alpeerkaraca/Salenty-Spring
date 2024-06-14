@@ -300,8 +300,9 @@
             <div th:if="${param.error}" class="alert alert-danger bg-red-400" role="alert">
                 Kullanıcı adı veya parola hatalı!
             </div>
-            <div th:if="${param.logout}" class="alert alert-danger bg-red-400" role="alert">
-                Çıkış Yaptınız.
+
+            <div th:if="${param.updated}" class="alert alert-danger bg-red-400" role="alert">
+                Güncellenen kullanıcı bilgilerinizle giriş yapınız.
             </div>
             <input type="text" placeholder="Kullanıcı Adı" name="username" required aria-required="true"/>
             <input type="password" placeholder="Parola" name="password" required aria-required="true"/>

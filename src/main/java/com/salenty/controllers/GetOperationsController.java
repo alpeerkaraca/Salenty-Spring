@@ -3,8 +3,8 @@ package com.salenty.controllers;
 
 import com.salenty.model.Category;
 import com.salenty.model.Product;
-import com.salenty.model.ProductDetail;
 import com.salenty.model.User;
+import com.salenty.repositories.CartItemRepository;
 import com.salenty.services.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,25 +13,25 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 public class GetOperationsController {
 
-    private ProductService productService;
+    private final ProductService productService;
+    private final UserService userService;
+    private final CategoryService categoryService;
+    private final CartService cartService;
+    private final CartItemRepository cartItemRepository;
 
-    private ProductDetailService productDetailService;
 
-    private UserService userService;
-
-    private CategoryService categoryService;
-
-    private CartService cartService;
-
-    public GetOperationsController(ProductService productService, ProductDetailService productDetailService, UserService userService, CategoryService categoryService, CartService cartService) {
+    public GetOperationsController(ProductService productService, UserService userService, CategoryService categoryService, CartService cartService, CartItemRepository cartItemRepository) {
         this.productService = productService;
-        this.productDetailService = productDetailService;
         this.userService = userService;
         this.categoryService = categoryService;
         this.cartService = cartService;
+        this.cartItemRepository = cartItemRepository;
     }
 
 
@@ -57,30 +57,27 @@ public class GetOperationsController {
         System.out.println("Details: " + auth.getDetails());
         System.out.println("Name: " + auth.getName());
 
-        java.util.List<Product> products = productService.getAllProducts();
-        for (int i = 0; i < products.size(); i++) {
-            if (i < 12)
-                products.get(i).setSellerName(userService.getUserById(products.get(i).getSellerId()).getUsername());
-            else {
-                products.remove(i);
-            }
+        List<Product> products = productService.getAllProducts();
+        List<Product> productsWillSend = new ArrayList<>(12);
+        for (int i = 0; i < products.size() && i < 13; i++) {
+            productsWillSend.add(products.get(i));
         }
-        model.addAttribute("products", products);
-        model.addAttribute("user", auth.getName());
+
+
+        model.addAttribute("products", productsWillSend);
         model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("cartItemCount", cartItemRepository.getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());
         return "/homepage";
     }
+
 
     @GetMapping("/product/{id}")
     public String getProductDetail(@PathVariable("id") int id, Model model) {
         Product product = productService.getAllProducts().stream().filter(p -> p.getProductId() == id).findFirst()
                 .orElse(null);
-        ProductDetail productDetail = productDetailService.getProductDetailByProductId(id);
 
-        if (product != null && productDetail != null) {
-            product.setSellerName(userService.getUserById(product.getSellerId()).getUsername()); // Seller name set here
+        if (product != null) {
             model.addAttribute("product", product);
-            model.addAttribute("productDetail", productDetail);
             model.addAttribute("categories", categoryService.getAllCategories());
             return "productDetailPage";
         } else {
@@ -90,8 +87,9 @@ public class GetOperationsController {
 
     @GetMapping("/cart")
     public String viewCart(Model model) {
-        User user = userService.findByUserName("alpeerkaracatest"); // Burayı dinamik hale getirin
-        if (user != null) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByUserName(auth.getName());
+        if (user != null && cartService.getCartByUser(user) != null) {
             model.addAttribute("cartItems", cartService.getCartByUser(user).getItems());
         }
         return "/fragments/cart";
@@ -99,26 +97,31 @@ public class GetOperationsController {
 
     @GetMapping("/account/{section}")
     public String account(@PathVariable("section") String section, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("user", auth.getName());
 
         switch (section) {
             case "users":
                 model.addAttribute("users", userService.getAllUsers());
                 break;
             case "myproducts":
-                model.addAttribute("orders", productService.getAllProducts());
+                userService.findByUserName(auth.getName());
+                model.addAttribute("orders", productService.getProductBySellerId(userService.findByUserName(auth.getName()).getUserId()));
                 break;
             case "orders":
                 model.addAttribute("orders", productService.getAllProducts());
+                System.out.println("Orders: " + productService.getAllProducts());
                 break;
             case "addProduct":
                 model.addAttribute("categories", categoryService.getAllCategories());
                 model.addAttribute("product", new Product());
                 model.addAttribute("category", new Category());
-                model.addAttribute("productDetail", new ProductDetail());
-
                 break;
             case "settings":
-                model.addAttribute("user", userService.getUserById(1));
+                model.addAttribute("user", userService.findByUserName(auth.getName()));
+                break;
+            case "allProducts":
+                model.addAttribute("products", productService.getAllProducts());
                 break;
             default:
                 model.addAttribute("section", "orders");
@@ -131,7 +134,7 @@ public class GetOperationsController {
     @GetMapping("/user/delete/{userId}")
     public String deleteUser(@PathVariable("userId") int userId) {
         userService.deleteUser(userId);
-        productService.deleteProduct(userId);
+        productService.deleteProductsByUserId(userId);
         return "redirect:/account/users";
     }
 

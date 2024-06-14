@@ -1,6 +1,5 @@
 package com.salenty.model;
 
-import com.salenty.model.Role;
 import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -125,5 +124,16 @@ public class User implements UserDetails {
         this.userRole = userRole;
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", userEmail='" + userEmail + '\'' +
+                ", userTel='" + userTel + '\'' +
+                ", password='" + password + '\'' +
+                ", userAddress='" + userAddress + '\'' +
+                ", userRole=" + userRole +
+                '}';
+    }
 }
