@@ -14,7 +14,7 @@ public class Product {
     private String productName;
 
     @Column(nullable = false)
-    private String productPrice;
+    private double productPrice;
 
     @JoinColumn(name = "user_id", nullable = false)
     @Column(nullable = false)
@@ -80,11 +80,11 @@ public class Product {
         this.productName = productName;
     }
 
-    public String getProductPrice() {
+    public double getProductPrice() {
         return productPrice;
     }
 
-    public void setProductPrice(String productPrice) {
+    public void setProductPrice(double productPrice) {
         this.productPrice = productPrice;
     }
 

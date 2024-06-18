@@ -9,10 +9,8 @@ import com.salenty.repositories.CartItemRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import jakarta.persistence.EntityManager;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class CartService {
@@ -27,19 +25,37 @@ public class CartService {
         return cartRepository.findByUser(user);
     }
 
-    public void addItemToCart(Cart cart, CartItem item) {
-
-        if (cart.getItems() == null) {
-            cart.setItems(new ArrayList<CartItem>());
-        }
-
-        cart.getItems().add(item);
-        cartItemRepository.save(item);
-        cartRepository.save(cart);
+    public CartItem getCartItemByProductId(Cart cart, int productId) {
+        return cart.getItems().stream()
+               .filter(item -> item.getProduct().getProductId() == productId)
+               .findFirst()
+               .orElse(null);
     }
 
     public void saveCart(Cart cart) {
         cartRepository.save(cart);
+    }
+
+    public void removeItemFromCart(Cart cart, int productId) {
+        CartItem item = getCartItemByProductId(cart, productId);
+        if (item != null) {
+            cartItemRepository.delete(item);
+        }
+    }
+
+    public void addItemToCart(Cart cart, Product product) {
+        CartItem existingItem = getCartItemByProductId(cart, product.getProductId());
+
+        if (existingItem != null) {
+            existingItem.setQuantity(existingItem.getQuantity() + 1);
+            cartItemRepository.save(existingItem);
+        } else {
+            CartItem newItem = new CartItem();
+            newItem.setProduct(product);
+            newItem.setQuantity(1);
+            newItem.setCart(cart);
+            cartItemRepository.save(newItem);
+        }
     }
 
     @Transactional
@@ -48,6 +64,4 @@ public class CartService {
         cart.setItems(new ArrayList<CartItem>());
         cartRepository.save(cart);
     }
-
-
 }
