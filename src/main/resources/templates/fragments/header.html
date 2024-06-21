@@ -18,8 +18,8 @@
                             <img class="h-8 w-auto" src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company">
                         </div>
                         <div class="hidden lg:ml-6 lg:flex lg:space-x-8">
-                            <div th:each="category : ${categories}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">
-                                <a th:href="@{/category/{id}(id=${category.categoryId})}" th:text="${category.categoryName}"></a>
+                            <div th:each="category : ${categories}" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" th:classappend="${category.categoryId} == ${selectedCategory} ? 'text-indigo-500 border-indigo-500' : ''">
+                                <a th:href="@{/category(id=${category.categoryId})}" th:data-id="${category.categoryId}" th:text="${category.categoryName}" class="category-link"></a>
                             </div>
                             <a href="#" class="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700">Mağazalar</a>
                         </div>
@@ -86,7 +86,7 @@
             <div class="lg:hidden" id="mobile-menu">
                 <div class="space-y-1 pb-3 pt-2">
                     <div th:each="category : ${categories}" class="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-800">
-                        <a th:href="@{/category/{id}(id=${category.categoryId})}" th:text="${category.categoryName}"></a>
+                        <a th:href="@{/category(id=${category.categoryId})}" th:data-id="${category.categoryId}" th:text="${category.categoryName}" class="category-link"></a>
                     </div>
                 </div>
                 <div class="border-t border-gray-200 pb-3 pt-4">
@@ -131,6 +131,15 @@
             document.addEventListener('click', function (event) {
                 if (!userMenu.contains(event.target)) {
                     userMenu.classList.add('hidden');
+                }
+            });
+
+            // Current category highlighting
+            const currentCategoryId = /* [[${selectedCategory}]] */ 0;
+            const links = document.querySelectorAll('.category-link');
+            links.forEach(link => {
+                if (link.getAttribute('data-id') == currentCategoryId) {
+                    link.parentElement.classList.add('text-indigo-500', 'border-indigo-500');
                 }
             });
         });

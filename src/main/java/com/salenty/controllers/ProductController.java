@@ -48,4 +48,16 @@ public class ProductController {
         
         return "homepage"; // Arama sonuçlarını ana sayfada gösteriyoruz
     }
+
+    @GetMapping("/category")
+    public String getProductsByCategory(@RequestParam("id") int categoryId, Model model) {
+        List<Product> products = productService.getProductsByCategoryId(categoryId);
+        model.addAttribute("products", products);
+
+        List<Category> categories = categoryService.getAllCategories();
+        model.addAttribute("categories", categories);
+        model.addAttribute("selectedCategory", categoryId);
+        
+        return "homepage"; // Kategori sonuçlarını ana sayfada gösteriyoruz
+    }
 }

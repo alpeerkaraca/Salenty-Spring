@@ -150,4 +150,7 @@ public class ProductService {
     public List<Product> searchProductsByName(String name) {
         return productRepository.findByProductNameContainingIgnoreCase(name);
     }
+    public List<Product> getProductsByCategoryId(int categoryId) {
+        return productRepository.findByCategory_CategoryId(categoryId);
+    }
 }
