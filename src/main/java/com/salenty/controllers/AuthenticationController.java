@@ -25,6 +25,11 @@ public class AuthenticationController {
         return "redirect:/login";
     }
 
+    @PostMapping("login")
+    public String login() {
+        return "redirect:/homepage";
+    }
+
     @PostMapping("update-user/{id}")
     public String updateMe(@PathVariable String id, User user) {
 

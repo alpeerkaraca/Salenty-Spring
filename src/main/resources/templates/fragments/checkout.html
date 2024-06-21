@@ -1,0 +1,380 @@
+<!DOCTYPE html >
+<html lang="tr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://cdn.tailwindcss.com/"></script>
+</head>
+
+<body>
+<div th:fragment="checkout">
+    <div class="bg-gray-50">
+
+        <div class="mx-auto max-w-2xl px-4 pb-24 pt-16 sm:px-6 lg:max-w-7xl lg:px-8">
+            <h2 class="sr-only">Ödeme</h2>
+
+            <form class="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16" th:object="${order}" method="post"
+                  th:action="@{/order}">
+                <div>
+                    <div>
+                        <h2 class="text-lg font-medium text-gray-900">İletişim Bilgileri</h2>
+
+                        <div class="mt-4">
+                            <label for="email-address" class="block text-sm font-medium text-gray-700">E-Posta
+                                Adresi</label>
+                            <div class="mt-1">
+                                <input th:field="*{buyerEmail}"
+                                       type="email"
+                                       id="email-address"
+                                       name="email-address"
+                                       autocomplete="email"
+                                       required
+                                       class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-1.5"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-10 border-t border-gray-200 pt-10">
+                        <h2 class="text-lg font-medium text-gray-900">Kargolama Bilgileri</h2>
+
+                        <div class="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
+                            <div>
+                                <label for="first-name" class="block text-sm font-medium text-gray-700">Ad</label>
+                                <div class="mt-1">
+                                    <input type="text" id="first-name" name="first-name" autocomplete="given-name"
+                                           th:field="*{buyerFirstName}"
+                                           required
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-1.5">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="last-name" class="block text-sm font-medium text-gray-700">Soyad</label>
+                                <div class="mt-1">
+                                    <input type="text" id="last-name" name="last-name" autocomplete="family-name"
+                                           th:field="*{buyerLastName}"
+                                           required
+                                           class="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm py-1.5">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-2">
+                                <label for="address" class="block text-sm font-medium text-gray-700">Adres</label>
+                                <div class="mt-1">
+                                    <input type="text" name="address" id="address" autocomplete="street-address"
+                                           th:field="*{buyerAddress}"
+                                           required
+                                           class="py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-2">
+                                <label for="apartment" class="block text-sm font-medium text-gray-700">Apartman
+                                    Adı</label>
+                                <div class="mt-1">
+                                    <input type="text" name="apartment" id="apartment" th:field="*{buyerApartment}"
+                                           class="py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="city" class="block text-sm font-medium text-gray-700">İlçe</label>
+                                <div class="mt-1">
+                                    <input type="text" name="city" id="city" autocomplete="address-level2"
+                                           th:field="*{buyerState}"
+                                           required
+                                           class="py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="country" class="block text-sm font-medium text-gray-700">Ülke</label>
+                                <div class="mt-1">
+                                    <select id="country" name="country" autocomplete="country-name"
+                                            th:field="*{buyerCountry}"
+                                            required
+                                            class="py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                        <option th:each="option : ${options}" th:value="${option}"
+                                                th:text="${option}"></option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="region" class="block text-sm font-medium text-gray-700">İl</label>
+                                <div class="mt-1">
+                                    <input type="text" name="region" id="region" autocomplete="address-level1"
+                                           th:field="*{buyerCity}"
+                                           required
+                                           class="py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="postal-code" class="block text-sm font-medium text-gray-700">Posta
+                                    Kodu</label>
+                                <div class="mt-1">
+                                    <input type="text" name="postal-code" id="postal-code" autocomplete="postal-code"
+                                           th:field="*{buyerZipCode}"
+                                           required
+                                           class="py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                            </div>
+
+                            <div class="sm:col-span-2">
+                                <label for="phone" class="block text-sm font-medium text-gray-700">Telefon
+                                    Numarası</label>
+                                <div class="mt-1">
+                                    <input type="text" maxlength="11" name="phone" id="phone" autocomplete="tel"
+                                           th:field="*{buyerPhone}"
+                                           required
+                                           class="py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Payment -->
+                    <div class="mt-10 border-t border-gray-200 pt-10">
+                        <h2 class="text-lg font-medium text-gray-900">Ödeme</h2>
+                        <fieldset class="mt-4">
+                            <legend class="sr-only">Ödeme Şekli</legend>
+                            <div class="space-y-4 sm:flex sm:items-center sm:space-x-10 sm:space-y-0">
+                                <div class="flex items-center">
+                                    <input id="credit-card" name="orderType" type="radio" value="CREDIT_CARD"
+                                           th:field="*{orderType}"
+                                           class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                           onchange="togglePaymentForm()">
+                                    <label for="credit-card" class="ml-3 block text-sm font-medium text-gray-700">Kredi
+                                        Kartı</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="pay-at-door" name="orderType" type="radio" value="PAY_AT_DOOR"
+                                           th:field="*{orderType}"
+                                           class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                           onchange="togglePaymentForm()">
+                                    <label for="pay-at-door" class="ml-3 block text-sm font-medium text-gray-700">Kapıda
+                                        Ödeme</label>
+                                </div>
+                                <div class="flex items-center">
+                                    <input id="etransfer" name="orderType" type="radio" value="E_TRANSFER"
+                                           th:field="*{orderType}"
+                                           class="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                           onchange="togglePaymentForm()">
+                                    <label for="etransfer" class="ml-3 block text-sm font-medium text-gray-700">Havale -
+                                        Eft</label>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="mt-6 grid grid-cols-4 gap-x-4 gap-y-6" id="credit-card-selected"
+                             style="display:none;">
+                            <div class="col-span-4">
+                                <label for="card-number" class="block text-sm font-medium text-gray-700">Kart
+                                    Numarası</label>
+                                <div class="mt-1">
+                                    <input type="text" id="card-number" name="card-number" autocomplete="cc-number"
+                                           maxlength="19" th:field="*{buyerCardNumber}"
+                                           class="py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                            </div>
+
+                            <div class="col-span-4">
+                                <label for="name-on-card" class="block text-sm font-medium text-gray-700">Kart
+                                    Üzerindeki Ad</label>
+                                <div class="mt-1">
+                                    <input type="text" id="name-on-card" name="name-on-card" autocomplete="cc-name"
+                                           th:field="*{buyerCardName}"
+                                           class="py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                            </div>
+
+                            <div class="col-span-3">
+                                <label for="expiration-date" class="block text-sm font-medium text-gray-700">Ay /
+                                    Yıl</label>
+                                <div class="mt-1">
+                                    <input type="text" name="expiration-date" id="expiration-date" autocomplete="cc-exp"
+                                           placeholder="MM/YY" th:field="*{buyerCardExpDate}"
+                                           class="py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label for="cvc" class="block text-sm font-medium text-gray-700">CVC</label>
+                                <div class="mt-1">
+                                    <input type="text" name="cvc" id="cvc" autocomplete="csc" th:field="*{buyerCardCvv}"
+                                           maxlength="4"
+                                           class="py-1.5 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 grid grid-cols gap-x-4 gap-y-6" id="etransfer-selected" style="display:none;">
+                            <div class="col-span-4">
+                                <div class="mt-1">
+                                    <p class="text-sm font-medium text-gray-700">Havale veya Eft yapmak için aşağıdaki
+                                        hesap numarasına ödemenizi yapabilirsiniz.</p>
+                                    <p class="text-lg font-medium text-gray-800">TR760009901234567800100001</p>
+                                    <p class="text-lg font-medium text-gray-800">Hesap Adı: Salenty E-Ticaret </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-6 grid grid-cols gap-x-4 gap-y-6" id="pay-at-door-selected"
+                             style="display:none;">
+                            <div class="col-span-4">
+                                <div class="mt-1">
+                                    <p class="text-sm font-medium text-gray-700">Ödemenizi kapıda nakit ya da kredi
+                                        kartı ile yapabilirsiniz.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order summary -->
+                <div class="mt-10 lg:mt-0">
+                    <h2 class="text-lg font-medium text-gray-900">Sipariş Özeti</h2>
+
+                    <div class="mt-4 rounded-lg border border-gray-200 bg-white shadow-sm">
+                        <h3 class="sr-only">Sepetinizdeki Ürünler</h3>
+                        <ul role="list" class="divide-y divide-gray-200">
+                            <li class="flex px-4 py-6 sm:px-6" th:each="product : ${productsInCart}">
+                                <div class="flex-shrink-0">
+                                    <img th:src="${product.productImage}"
+                                         th:alt="${product.productName}" class="w-20 rounded-md">
+                                </div>
+
+                                <div class="ml-6 flex flex-1 flex-col">
+                                    <div class="flex">
+                                        <div class="min-w-0 flex-1">
+                                            <h4 class="text-sm">
+                                                <a href="#" class="font-medium text-gray-700 hover:text-gray-800"
+                                                   th:text="${product.productName}"></a>
+                                            </h4>
+                                        </div>
+
+                                        <div class="ml-4 flow-root flex-shrink-0">
+                                            <button type="button"
+                                                    class="-m-2.5 flex items-center justify-center bg-white p-2.5 text-gray-400 hover:text-gray-500">
+                                                <span class="sr-only">Kaldır</span>
+                                                <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"
+                                                     aria-hidden="true">
+                                                    <path fill-rule="evenodd"
+                                                          d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
+                                                          clip-rule="evenodd"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex flex-1 items-end justify-between pt-2">
+                                        <p class="mt-1 text-sm font-medium text-gray-900"
+                                           th:text="${product.productPrice} + TL"></p>
+
+                                        <div class="ml-4">
+                                            <span th:each="quantity : ${items}">
+                                                    <span th:if="${quantity.productId == product.productId}"
+                                                          th:text="${quantity.quantity} + x">Adet</span>
+                                                </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+
+                            <!-- More products... -->
+                        </ul>
+                        <dl class="space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6">
+                            <div class="flex items-center justify-between">
+                                <dt class="text-sm">Sipariş Ücreti</dt>
+                                <dd class="text-sm font-medium text-gray-900" id="order-price"
+                                    th:text="${total} + TL"></dd>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <dt class="text-sm">Kargolama</dt>
+                                <dd class="text-sm font-medium text-gray-900">39 TL</dd>
+                            </div>
+                            <div class="flex items-center justify-between border-t border-gray-200 pt-6">
+                                <dt class="text-base font-medium">Toplam</dt>
+                                <dd class="text-base font-medium text-gray-900" id="sub-total"
+                                    th:field="*{orderTotal}"></dd>
+                                <input type="hidden" id="orderTotal" name="orderTotal" th:field="*{orderTotal}"
+                                       value=""/>
+                            </div>
+                        </dl>
+
+                        <div class="border-t border-gray-200 px-4 py-6 sm:px-6">
+                            <button type="submit"
+                                    class="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50">
+                                Siparişi Onayla
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script th:inline="javascript">
+
+        function togglePaymentForm() {
+            const creditCardSection = document.getElementById('credit-card-selected');
+            const eTransferSection = document.getElementById('etransfer-selected');
+            const payAtDoorSection = document.getElementById('pay-at-door-selected');
+
+            // Hide all sections initially
+            creditCardSection.style.display = 'none';
+            eTransferSection.style.display = 'none';
+            payAtDoorSection.style.display = 'none';
+
+            // Show the selected section
+            if (document.getElementById('credit-card').checked) {
+                creditCardSection.style.display = 'block';
+            } else if (document.getElementById('etransfer').checked) {
+                eTransferSection.style.display = 'block';
+            } else if (document.getElementById('pay-at-door').checked) {
+                payAtDoorSection.style.display = 'block';
+            }
+        }
+
+        // Call the function initially to set the correct form visibility
+        document.addEventListener('DOMContentLoaded', function () {
+            togglePaymentForm();
+        });
+
+
+        document.getElementById('card-number').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove all non-digit characters
+            value = value.match(/.{1,4}/g)?.join(' ') || ''; // Insert space every 4 digits
+            e.target.value = value;
+        });
+
+        document.getElementById('expiration-date').addEventListener('input', function (e) {
+            let value = e.target.value.replace(/\D/g, ''); // Remove all non-digit characters
+            if (value.length >= 3) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4); // Insert slash between MM and YY
+            }
+            e.target.value = value;
+        });
+
+        document.getElementById('expiration-date').addEventListener('blur', function (e) {
+            let value = e.target.value;
+            if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(value)) { // Validate MM/YY format
+                alert('Geçersiz tarih formatı. Lütfen MM/YY formatında giriniz.');
+                e.target.value = '';
+            }
+        });
+
+        document.getElementById('cvc').addEventListener('input', function (e) {
+            e.target.value = e.target.value.replace(/\D/g, ''); // Remove all non-digit characters
+        });
+
+        let subtotal = document.getElementById('order-price').innerText;
+        let total = parseFloat(subtotal) + 39;
+        document.getElementById('sub-total').innerText = total + ' TL';
+        let orderTotalVal = document.getElementById('orderTotal').value;
+        document.getElementById('orderTotal').value = total;
+
+
+    </script>
+</div>
+</body>

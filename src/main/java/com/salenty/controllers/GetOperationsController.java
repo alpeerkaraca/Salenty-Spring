@@ -1,10 +1,9 @@
 package com.salenty.controllers;
 
 
-import com.salenty.model.Category;
-import com.salenty.model.Product;
-import com.salenty.model.User;
+import com.salenty.model.*;
 import com.salenty.repositories.CartItemRepository;
+import com.salenty.repositories.ProductRepository;
 import com.salenty.services.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -24,14 +24,16 @@ public class GetOperationsController {
     private final CategoryService categoryService;
     private final CartService cartService;
     private final CartItemRepository cartItemRepository;
+    private final ProductRepository productRepository;
 
 
-    public GetOperationsController(ProductService productService, UserService userService, CategoryService categoryService, CartService cartService, CartItemRepository cartItemRepository) {
+    public GetOperationsController(ProductService productService, UserService userService, CategoryService categoryService, CartService cartService, CartItemRepository cartItemRepository, ProductRepository productRepository) {
         this.productService = productService;
         this.userService = userService;
         this.categoryService = categoryService;
         this.cartService = cartService;
         this.cartItemRepository = cartItemRepository;
+        this.productRepository = productRepository;
     }
 
 
@@ -88,11 +90,21 @@ public class GetOperationsController {
     @GetMapping("/cart")
     public String viewCart(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        List<Product> productsInCart = new ArrayList<>();
         User user = userService.findByUserName(auth.getName());
+        model.addAttribute("categories", categoryService.getAllCategories());
         if (user != null && cartService.getCartByUser(user) != null) {
-            model.addAttribute("cartItems", cartService.getCartByUser(user).getItems());
+
+            cartService.getCartByUser(user).getItems().forEach(item -> {
+                if(productRepository.findById(item.getProductId()).isPresent()) {
+                    productsInCart.add(productRepository.findById(item.getProductId()).get());
+                }
+            });
+            model.addAttribute("total", cartService.calculateTotal(cartService.getCartByUser(user)));
+            model.addAttribute("items", cartService.getCartByUser(user).getItems());
+            model.addAttribute("productsInCart", productsInCart);
         }
-        return "/fragments/cart";
+        return "cart";
     }
 
     @GetMapping("/account/{section}")
@@ -142,6 +154,29 @@ public class GetOperationsController {
     public String deleteProduct(@PathVariable("productId") int productId) {
         productService.deleteProduct(productId);
         return "redirect:/account/myproducts";
+    }
+
+    @GetMapping("/checkout")
+    public String checkout(Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findByUserName(auth.getName());
+        List<Product> productsInCart = new ArrayList<>();
+
+        cartService.getCartByUser(user).getItems().forEach(item -> {
+            if(productRepository.findById(item.getProductId()).isPresent()) {
+                productsInCart.add(productRepository.findById(item.getProductId()).get());
+            }
+        });
+
+        model.addAttribute("userInfo", user);
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("items", cartService.getCartByUser(user).getItems());
+        model.addAttribute("productsInCart", productsInCart);
+        model.addAttribute("total", cartService.calculateTotal(cartService.getCartByUser(user)));
+        model.addAttribute("order", new Order());
+        System.out.println("Options: " + Arrays.asList(Countries.values()));
+        model.addAttribute("options", Arrays.asList(Countries.values()));
+        return "checkout";
     }
 
 }

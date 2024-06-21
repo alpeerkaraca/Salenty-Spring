@@ -12,7 +12,7 @@ import com.salenty.model.Product;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
     List<CartItem> getCartItemsByCart(Cart cart);
-    CartItem findByCartAndProduct(Cart cart, Product product);
+    CartItem findByCartAndProductId(Cart cart, Integer productId);
     void deleteCartItemByCart(Cart cart);
-    void deleteByCartAndProduct(Cart cart, Product product);
+    void deleteByCartAndProductId(Cart cart, Integer productId);
 }
