@@ -9,13 +9,12 @@
 </head>
 
 <body>
-<header th:insert="~{fragments/header :: header}"></header>
-<main>
-    <div th:replace="~{fragments/categories :: categories}"></div>
-    <div th:replace="~{fragments/product :: product}"></div>
-    <!-- <div th:replace="fragments/drawercart :: drawercart"></div> -->
-</main>
-<footer th:replace="~{fragments/footer :: footer}"></footer>
+    <header th:insert="~{fragments/header :: header}"></header>
+    <main>
+        <div th:replace="~{fragments/categories :: categories}"></div>
+        <div th:replace="~{fragments/product :: product}"></div>
+    </main>
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
 </body>
 
 </html>
