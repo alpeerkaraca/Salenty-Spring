@@ -55,16 +55,13 @@ public class ProductService {
             throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        // Satıcı ID ve Adını tanımla
         product.setSellerId(userService.findByUserName(auth.getName()).getUserId());
         product.setSellerName(auth.getName());
 
-        // Kategori Adını tanımla
         product.getCategory().setCategoryName(categoryService.getCategoryById(product.getCategory().getCategoryId()));
 
 
 
-        // Upload the cover image and set the URL
         if (!coverImage.isEmpty()) {
             String coverImageUrl = uploadImage(coverImage);
             System.out.println("Cover Image Yüklendi: " + coverImageUrl);
@@ -73,7 +70,7 @@ public class ProductService {
             product.setProductImage(DEFAULT_IMAGE_URL);
         }
 
-        // Upload other images and set their URLs
+
         if (images != null && images.length > 0) {
             for (int i = 0; i < images.length && i < 3; i++) {
                 if (!images[i].isEmpty()) {
@@ -97,7 +94,6 @@ public class ProductService {
             }
         }
 
-        // Ensure all image fields are set to default if not provided
         if (images == null || images.length < 3) {
             if (images == null || images.length == 0 || images[0].isEmpty()) {
                 product.setProductImage1(DEFAULT_IMAGE_URL);
@@ -109,9 +105,7 @@ public class ProductService {
                 product.setProductImage3(DEFAULT_IMAGE_URL);
             }
         }
-//        Print the product
-        System.out.println(product.toString());
-        // Save the Product
+
         productRepository.save(product);
 
         System.out.println("Product saved successfully.");
@@ -138,7 +132,6 @@ public class ProductService {
         ResponseEntity<String> response = restTemplate.exchange(uploadUrl, HttpMethod.POST, requestEntity,
                 String.class);
 
-        // Parse the JSON response to get the image URL
         JSONObject jsonObject = new JSONObject(response.getBody());
         System.out.println(jsonObject);
         return jsonObject.getJSONObject("data").getString("url");

@@ -31,9 +31,9 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http.formLogin(formLogin -> formLogin.loginPage("/login")
-                        .successForwardUrl("/homepage")
-                .permitAll())
+        return http.csrf(AbstractHttpConfigurer::disable).
+                formLogin(formLogin -> formLogin.loginPage("/login")
+                        .permitAll())
                 .authorizeHttpRequests(req -> req
                         .requestMatchers("/register", "/logout", "/product/**", "/productDetail/**", "/homepage")
                         .permitAll()

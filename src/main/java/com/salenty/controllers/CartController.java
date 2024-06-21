@@ -44,11 +44,11 @@ public class CartController {
 
             Product product = productService.getProductById(productId);
             if (product != null) {
-                cartService.addItemToCart(cart, product);
+                cartService.addItemToCart(cart, productId);
             }
 
             cart = cartService.getCartByUser(user);
-            if (cart != null) {
+            if (cart != null && cart.getItems() != null) {
                 model.addAttribute("cartItemCount", cart.getItems().size());
             } else {
                 model.addAttribute("cartItemCount", 0);
