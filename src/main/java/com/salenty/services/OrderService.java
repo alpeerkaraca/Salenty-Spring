@@ -34,6 +34,10 @@ public class OrderService {
         return orderRepository.findOrderByBuyer(buyer);
     }
 
+    public List<Order> getOrdersByBuyer(User buyer) {
+        return orderRepository.findOrdersByBuyer(buyer);
+    }
+
     public List<Order> getAllOrders() {
         return orderRepository.findAll();
     }

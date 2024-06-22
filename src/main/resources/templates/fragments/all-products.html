@@ -70,7 +70,7 @@
                     >
                         <a
                                 th:href="@{/product/edit/{id} (id=${product.productId})}"
-                                class="text-indigo-600 hover:text-indigo-900"
+                                class="text-orange-600 hover:text-orange-900"
                         >Düzenle<span class="sr-only"></span
                         ></a>
                     </td>
@@ -79,7 +79,7 @@
                     >
                         <a
                                 th:href="@{/product/delete/{id} (id=${product.productId})}"
-                                class="text-indigo-600 hover:text-indigo-900 delete-button"
+                                class="text-orange-600 hover:text-orange-900 delete-button"
                         >Sil<span class="sr-only"></span
                         ></a>
                     </td>
@@ -95,7 +95,7 @@
             deleteButtons.forEach(function (button) {
                 button.addEventListener("click", function (event) {
                     const confirmed = confirm(
-                        "Kullanıcıyı silmek istediğinize emin misiniz?"
+                        "Ürünü silmek istediğinize emin misiniz?"
                     );
                     if (!confirmed) {
                         event.preventDefault();

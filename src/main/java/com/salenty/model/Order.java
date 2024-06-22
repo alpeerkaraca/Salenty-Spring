@@ -2,10 +2,9 @@ package com.salenty.model;
 
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 @Entity(name = "Orders")
@@ -24,6 +23,7 @@ public class Order {
     private String buyerCountry;
     private String buyerZipCode;
     private String buyerApartment;
+    private String orderDate;
 
     private String buyerCardNumber;
     private String buyerCardExpDate;
@@ -164,7 +164,7 @@ public class Order {
         this.orderType = orderType;
     }
 
-    public List<Product> getProduct() {
+    public List<Product> getProducts() {
         return product;
     }
 
@@ -202,6 +202,14 @@ public class Order {
 
     public void setBuyerEmail(String buyerEmail) {
         this.buyerEmail = buyerEmail;
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
     }
 
     @Override

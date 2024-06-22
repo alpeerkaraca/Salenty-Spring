@@ -24,16 +24,18 @@ public class GetOperationsController {
     private final CartService cartService;
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
+    private final OrderService orderService;
 
     public GetOperationsController(ProductService productService, UserService userService,
-            CategoryService categoryService, CartService cartService, CartItemRepository cartItemRepository,
-            ProductRepository productRepository) {
+                                   CategoryService categoryService, CartService cartService, CartItemRepository cartItemRepository,
+                                   ProductRepository productRepository, OrderService orderService) {
         this.productService = productService;
         this.userService = userService;
         this.categoryService = categoryService;
         this.cartService = cartService;
         this.cartItemRepository = cartItemRepository;
         this.productRepository = productRepository;
+        this.orderService = orderService;
     }
 
     @GetMapping("/register")
@@ -125,9 +127,26 @@ public class GetOperationsController {
                 model.addAttribute("orders",
                         productService.getProductBySellerId(userService.findByUserName(auth.getName()).getUserId()));
                 break;
+            case "order-history":
+                List<Order> orders = orderService.getOrdersByBuyer(userService.findByUserName(auth.getName()));
+                model.addAttribute("myOrders", orderService.getOrdersByBuyer(userService.findByUserName(auth.getName())));
+                System.out.println(orders.getFirst().getProducts());
+                break;
             case "orders":
-                model.addAttribute("orders", productService.getAllProducts());
-                System.out.println("Orders: " + productService.getAllProducts());
+                List<Order> orderList = orderService.getAllOrders();
+                List<Order> itemsList = new ArrayList<>();
+                List<Product> productsInOrder = new ArrayList<>();
+                for (Order order : orderList) {
+                    if (order.getProducts().stream().anyMatch(product -> product.getSellerId() == userService.findByUserName(auth.getName()).getUserId())) {
+                        itemsList.add(order);
+                    }
+                }
+
+                System.out.println("Products in order: " + productsInOrder);
+                model.addAttribute("productsInOrder", productsInOrder);
+                model.addAttribute("orders", itemsList);
+                model.addAttribute("statuses", Arrays.asList(Status.values()));
+                model.addAttribute("orderIncoming", new Order());
                 break;
             case "addProduct":
                 model.addAttribute("categories", categoryService.getAllCategories());

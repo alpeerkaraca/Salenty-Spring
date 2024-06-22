@@ -3,10 +3,10 @@
         <div class="sm:flex sm:items-center">
             <div class="sm:flex-auto">
                 <h1 class="text-base font-semibold leading-6 text-gray-900">
-                    Ürünlerim
+                    Siparişler
                 </h1>
                 <p class="mt-2 text-sm text-gray-700">
-                    Satışta olan ürünlerinizi listeleyin ve düzenleyin.
+                    Sipariş edilen ürünlerin listesi.
                 </p>
             </div>
         </div>
@@ -14,6 +14,14 @@
             <table class="min-w-full divide-y divide-gray-300">
                 <thead>
                 <tr>
+
+                    <th
+                            scope="col"
+                            class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
+                    >
+                        Sipariş Numarası
+                    </th>
+
                     <th
                             scope="col"
                             class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
@@ -44,54 +52,96 @@
                     >Adres
                     </th>
 
+                    <th
+                            scope="col"
+                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >Durum
+                    </th>
 
-                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                        <span class="sr-only">Düzenle</span>
+                    <th
+                            scope="col"
+                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                    >Durum Güncelle
                     </th>
-                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                        <span class="sr-only">Sil</span>
-                    </th>
+
                 </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                <tr th:each=" order : ${orders}">
-                    <td
-                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
-                            th:text="${order.productName}"
-                    ></td>
-                    <td
-                            class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:table-cell"
-                            th:text="${order.productPrice}"
-                    ></td>
-                    <td
-                            class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
-                            th:text="${order.category.categoryName}"
-                    ></td>
-
-                    <td
-                            class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"
-                    >
-                        <a
-                                th:href="@{/product/edit/{id} (id=${order.productId})}"
-                                class="text-indigo-600 hover:text-indigo-900"
-                        >Düzenle<span class="sr-only"></span
-                        ></a>
+                <tr th:each="order : ${orders}">
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
+                        th:text="${order.orderId}"></td>
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                        <table>
+                            <tbody th:each="product : ${order.products}">
+                            <tr>
+                                <td th:text="${product.productName}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </td>
-                    <td
-                            class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"
-                    >
-                        <a
-                                th:href="@{/product/delete/{id} (id=${order.productId})}"
-                                class="text-indigo-600 hover:text-indigo-900 delete-button"
-                        >Sil<span class="sr-only"></span
-                        ></a>
+
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                        <table>
+                            <tbody th:each="product : ${order.products}">
+                            <tr>
+                                <td th:text="${product.productPrice}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+
+                    <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0">
+                        <table>
+                            <tbody th:each="product : ${order.products}">
+                            <tr>
+                                <td th:text="${product.category.categoryName}"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                        th:text="${order.buyerFirstName} + ' ' + ${order.buyerLastName}"></td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                        th:text="${order.buyerAddress} + ' ' + ${order.buyerCity} + ' / ' + ${order.buyerState} + ' , ' + ${order.buyerCountry}"></td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                        th:text="${order.orderStatus.toString().replace('_', ' ')}"></td>
+
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                        th:if="${order.orderStatus.toString() != 'TESLİM_EDİLDİ' && order.orderStatus.toString() != 'İPTAL_EDİLDİ'}">
+                        <select id="category" th:field="*{orderIncoming.orderStatus}"
+                                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-orange-600 sm:max-w-xs sm:text-sm sm:leading-6"
+                                th:attr="onchange='updateStatus(' + ${order.orderId} + ')'">
+                            <option th:each="status : ${statuses}" th:value="${status}" th:text="${status}"></option>
+                        </select>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                        th:if="${order.orderStatus.toString() == 'TESLİM_EDİLDİ'}">
+                        <span class="text-green-600 font-bold">Bu Ürün Teslim Edildi</span>
+                    </td>
+                    <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
+                        th:if="${order.orderStatus.toString() == 'İPTAL_EDİLDİ'}">
+                        <span class="text-red-600 font-bold">Bu Ürün İptal Edildi</span>
                     </td>
                 </tr>
                 </tbody>
+
             </table>
         </div>
     </div>
-    <script>
+    <script th:inline="javascript">
+        function updateStatus(orderId) {
+            console.log("Ben burdayıım")
+            const select = document.getElementById("category");
+            const status = select.value;
+            fetch("/updateOrderStatus/" + orderId + "?status=" + status, {
+                method: "POST",
+            }).then(() => {
+                location.reload();
+            });
+        }
+
+
         document.addEventListener("DOMContentLoaded", function () {
             const deleteButtons = document.querySelectorAll(".delete-button");
 

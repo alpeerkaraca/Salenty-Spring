@@ -31,7 +31,7 @@ public class CartController {
     }
 
     @PostMapping("/add-to-cart/{productId}")
-    public String addToCart(@PathVariable("productId") int productId, Model model) {
+    public String addToCart(@PathVariable("productId") int productId,  Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByUserName(auth.getName());
         if (user != null) {
