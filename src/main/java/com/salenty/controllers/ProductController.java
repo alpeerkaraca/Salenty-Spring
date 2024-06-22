@@ -3,6 +3,8 @@ package com.salenty.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -39,22 +41,29 @@ public class ProductController {
 
     @GetMapping("/search")
     public String searchProducts(@RequestParam("search") String search, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        
+
         List<Product> products = productService.searchProductsByName(search);
         model.addAttribute("products", products);
         
         // Add categories to the model
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
+        model.addAttribute("username", auth.getName());
         
         return "homepage"; // Arama sonuçlarını ana sayfada gösteriyoruz
     }
 
     @GetMapping("/category")
     public String getProductsByCategory(@RequestParam("id") int categoryId, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("Category id: " + categoryId);
         List<Product> products = productService.getProductsByCategoryId(categoryId);
         model.addAttribute("products", products);
 
         List<Category> categories = categoryService.getAllCategories();
+        model.addAttribute("username", auth.getName());
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategory", categoryId);
         

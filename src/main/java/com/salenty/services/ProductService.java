@@ -3,6 +3,7 @@ package com.salenty.services;
 import java.io.IOException;
 import java.util.List;
 
+import com.salenty.repositories.CartItemRepository;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -31,6 +32,8 @@ public class ProductService {
     private ProductRepository productRepository;
     private final UserService userService;
     private final CategoryService categoryService;
+    @Autowired
+    private CartItemRepository cartItemRepository;
 
     public ProductService(ProductRepository productRepository, UserService userService, CategoryService categoryService) {
         this.productRepository = productRepository;
@@ -47,6 +50,7 @@ public class ProductService {
     }
 
     public void deleteProduct(int productId) {
+        cartItemRepository.deleteCartItemByProductId(productId);
         productRepository.deleteById(productId);
     }
 
