@@ -8,36 +8,87 @@
 </head>
 
 <body>
-    <div th:fragment="product">
-        <div class="bg-white py-8">
-            <div class="container mx-auto px-4 sm:px-6 lg:px-24">
-                <h2 class="text-2xl font-bold tracking-tight text-gray-900">Tüm Ürünler</h2>
+<div th:fragment="product">
+    <div class="bg-white py-8">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-24">
+            <h2 class="text-2xl font-bold tracking-tight text-gray-900">Tüm Ürünler</h2>
 
-                <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+            <div class="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
 
-                    <div th:each="product : ${products}" class="group relative bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                        <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-t-md bg-gray-200 lg:aspect-none lg:h-64">
-                            <img th:src="${product.productImage}" th:alt="${product.productName}" class="h-full w-full object-cover object-center lg:h-full lg:w-full">
-                        </div>
-                        <div class="mt-4 p-4 flex justify-between">
-                            <div>
-                                <h3 class="text-sm text-gray-700">
-                                    <a th:href="@{/product/{productId}(productId=${product.productId})}" th:text="${product.productName}">
-                                        <span aria-hidden="true" class="absolute inset-0"></span>
-                                    </a>
-                                </h3>
-                                <p class="mt-1 text-sm text-gray-500" th:text="${product.sellerName}"></p>
-                            </div>
-                            <p class="text-sm font-medium text-gray-900">
-                                <span th:text="${product.productPrice}"></span> ₺
-                            </p>
-                        </div>
+                <div th:each="product : ${products}"
+                     class="group infos relative bg-white border border-gray-200 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer"
+                     th:attr="onclick='navigatoToProduct(' + ${product.productId} + ')'">
+
+                    <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-t-md bg-gray-200 lg:aspect-none lg:h-64">
+
+                        <img th:src="${product.productImage}" th:alt="${product.productName}"
+                             class="h-full w-full object-cover object-center lg:h-full lg:w-full">
                     </div>
 
+                    <div class="mt-4 p-4 flex justify-between go-away">
+                        <div>
+                            <h3 class="text-sm text-gray-700">
+                                <a th:href="@{/product/{productId}(productId=${product.productId})}"
+                                   th:text="${product.productName}">
+                                    <span aria-hidden="true" class="absolute inset-0"></span>
+                                </a>
+                            </h3>
+                            <p class="mt-1 text-sm text-gray-500" th:text="${product.sellerName}"></p>
+                        </div>
+                        <p class="text-sm font-medium text-gray-900">
+                            <span th:text="${product.productPrice}"></span> ₺
+                        </p>
+                    </div>
+
+
+                    <div class="mt-4 p-4 flex items-center justify-center hidden add-to-cart">
+                        <div>
+                            <button class=" bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 h-auto w-fit rounded add-to-cart-btn"
+                                    th:attr="onclick='addProductToCart(' + ${product.productId} + ')'">
+                                Sepete Ekle
+                            </button>
+                        </div>
+                    </div>
                 </div>
+
             </div>
         </div>
     </div>
+    <script>
+        let infos = document.querySelectorAll('.infos');
+        let goAway = document.querySelectorAll('.go-away');
+        let addToCart = document.querySelectorAll('.add-to-cart');
+        let addBtn = document.querySelectorAll('.add-to-cart-btn');
+
+        infos.forEach((info, index) => {
+            info.addEventListener('mouseover', () => {
+                goAway[index].classList.add('hidden')
+                addToCart[index].classList.remove('hidden')
+            })
+            info.addEventListener('mouseleave', () => {
+                goAway[index].classList.remove('hidden')
+                addToCart[index].classList.add('hidden')
+            })
+        });
+
+        function addProductToCart(productId) {
+            fetch('/add-to-cart/' + productId, {
+                method: 'POST'
+            }).then(() => {
+                window.location.reload()
+            }).catch(() => {
+                alert('Ürün sepete eklenirken bir hata oluştu.')
+            })
+        }
+
+        function navigatoToProduct(productId) {
+            window.location.href = '/product/' + productId
+        }
+
+    </script>
+</div>
+
+
 </body>
 
 </html>
