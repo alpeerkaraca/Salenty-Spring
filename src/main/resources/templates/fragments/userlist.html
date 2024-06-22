@@ -9,14 +9,6 @@
                     Kayıtlı kullanıcıları görüntüleyin ve düzenleyin.
                 </p>
             </div>
-            <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
-                <button
-                        type="button"
-                        class="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >
-                    Ekle
-                </button>
-            </div>
         </div>
         <div class="-mx-4 mt-8 sm:-mx-0">
             <table class="min-w-full divide-y divide-gray-300">
@@ -88,7 +80,7 @@
                     >
                         <a
                                 th:href="@{/user/edit/{id} (id=${user.userId})}"
-                                class="text-indigo-600 hover:text-indigo-900"
+                                class="text-indigo-600 hover:text-indigo-900 transition duration-200 ease-in-out hover:transition hover:duration-200 hover:ease-in-out"
                         >Düzenle<span class="sr-only"></span
                         ></a>
                     </td>
@@ -97,7 +89,7 @@
                     >
                         <a
                                 th:href="@{/user/delete/{id} (id=${user.userId})}"
-                                class="text-indigo-600 hover:text-indigo-900 delete-button"
+                                class="text-indigo-600 hover:text-indigo-900 delete-button transition duration-200 ease-in-out hover:transition hover:duration-200 hover:ease-in-out"
                         >Sil<span class="sr-only"></span
                         ></a>
                     </td>

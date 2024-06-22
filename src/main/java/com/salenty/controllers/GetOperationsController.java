@@ -1,6 +1,5 @@
 package com.salenty.controllers;
 
-
 import com.salenty.model.*;
 import com.salenty.repositories.CartItemRepository;
 import com.salenty.repositories.ProductRepository;
@@ -26,8 +25,9 @@ public class GetOperationsController {
     private final CartItemRepository cartItemRepository;
     private final ProductRepository productRepository;
 
-
-    public GetOperationsController(ProductService productService, UserService userService, CategoryService categoryService, CartService cartService, CartItemRepository cartItemRepository, ProductRepository productRepository) {
+    public GetOperationsController(ProductService productService, UserService userService,
+            CategoryService categoryService, CartService cartService, CartItemRepository cartItemRepository,
+            ProductRepository productRepository) {
         this.productService = productService;
         this.userService = userService;
         this.categoryService = categoryService;
@@ -35,7 +35,6 @@ public class GetOperationsController {
         this.cartItemRepository = cartItemRepository;
         this.productRepository = productRepository;
     }
-
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -52,12 +51,6 @@ public class GetOperationsController {
     @GetMapping("/homepage")
     public String home(Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        System.out.println("Authentication status: " + auth.isAuthenticated());
-        System.out.println("Principal: " + auth.getPrincipal());
-        System.out.println("Credentials: " + auth.getCredentials());
-        System.out.println("Authorities: " + auth.getAuthorities());
-        System.out.println("Details: " + auth.getDetails());
-        System.out.println("Name: " + auth.getName());
 
         List<Product> products = productService.getAllProducts();
         List<Product> productsWillSend = new ArrayList<>(12);
@@ -65,22 +58,27 @@ public class GetOperationsController {
             productsWillSend.add(products.get(i));
         }
 
-
+        model.addAttribute("username", auth.getName());
         model.addAttribute("products", productsWillSend);
         model.addAttribute("categories", categoryService.getAllCategories());
-        model.addAttribute("cartItemCount", cartItemRepository.getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());
+        model.addAttribute("cartItemCount", cartItemRepository
+                .getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());
         return "/homepage";
     }
 
-
     @GetMapping("/product/{id}")
     public String getProductDetail(@PathVariable("id") int id, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Product product = productService.getAllProducts().stream().filter(p -> p.getProductId() == id).findFirst()
                 .orElse(null);
 
         if (product != null) {
             model.addAttribute("product", product);
             model.addAttribute("categories", categoryService.getAllCategories());
+            model.addAttribute("username", auth.getName());
+            model.addAttribute("cartItemCount", cartItemRepository
+                    .getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());
+
             return "productDetailPage";
         } else {
             return "error"; // Not found page
@@ -96,13 +94,17 @@ public class GetOperationsController {
         if (user != null && cartService.getCartByUser(user) != null) {
 
             cartService.getCartByUser(user).getItems().forEach(item -> {
-                if(productRepository.findById(item.getProductId()).isPresent()) {
+                if (productRepository.findById(item.getProductId()).isPresent()) {
                     productsInCart.add(productRepository.findById(item.getProductId()).get());
                 }
             });
             model.addAttribute("total", cartService.calculateTotal(cartService.getCartByUser(user)));
             model.addAttribute("items", cartService.getCartByUser(user).getItems());
             model.addAttribute("productsInCart", productsInCart);
+            model.addAttribute("username", auth.getName());
+            model.addAttribute("cartItemCount", cartItemRepository
+                    .getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());
+
         }
         return "cart";
     }
@@ -111,14 +113,17 @@ public class GetOperationsController {
     public String account(@PathVariable("section") String section, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("user", auth.getName());
-
+        model.addAttribute("cartItemCount", cartItemRepository
+                .getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());
+        model.addAttribute("role", userService.findByUserName(auth.getName()).getUserRole().toString());
         switch (section) {
             case "users":
                 model.addAttribute("users", userService.getAllUsers());
                 break;
             case "myproducts":
                 userService.findByUserName(auth.getName());
-                model.addAttribute("orders", productService.getProductBySellerId(userService.findByUserName(auth.getName()).getUserId()));
+                model.addAttribute("orders",
+                        productService.getProductBySellerId(userService.findByUserName(auth.getName()).getUserId()));
                 break;
             case "orders":
                 model.addAttribute("orders", productService.getAllProducts());
@@ -163,12 +168,13 @@ public class GetOperationsController {
         List<Product> productsInCart = new ArrayList<>();
 
         cartService.getCartByUser(user).getItems().forEach(item -> {
-            if(productRepository.findById(item.getProductId()).isPresent()) {
+            if (productRepository.findById(item.getProductId()).isPresent()) {
                 productsInCart.add(productRepository.findById(item.getProductId()).get());
             }
         });
-
+        model.addAttribute("cartItemCount", cartItemRepository.getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());
         model.addAttribute("userInfo", user);
+        model.addAttribute("username", auth.getName());
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("items", cartService.getCartByUser(user).getItems());
         model.addAttribute("productsInCart", productsInCart);
