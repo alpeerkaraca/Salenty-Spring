@@ -1,5 +1,6 @@
 package com.salenty.controllers;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,10 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.salenty.model.Category;
@@ -24,7 +22,7 @@ public class ProductController {
 
     private final ProductService productService;
     private final UserService userService;
-    
+
     @Autowired
     private CategoryService categoryService;
 
@@ -42,16 +40,16 @@ public class ProductController {
     @GetMapping("/search")
     public String searchProducts(@RequestParam("search") String search, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        
+
 
         List<Product> products = productService.searchProductsByName(search);
         model.addAttribute("products", products);
-        
+
         // Add categories to the model
         List<Category> categories = categoryService.getAllCategories();
         model.addAttribute("categories", categories);
         model.addAttribute("username", auth.getName());
-        
+
         return "homepage"; // Arama sonuçlarını ana sayfada gösteriyoruz
     }
 
@@ -66,7 +64,20 @@ public class ProductController {
         model.addAttribute("username", auth.getName());
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategory", categoryId);
-        
+
         return "homepage"; // Kategori sonuçlarını ana sayfada gösteriyoruz
+    }
+
+    @PostMapping("/product/edit/{id}")
+    public String updateProduct(Product product, @PathVariable("id") int id , @RequestParam MultipartFile coverImage, @RequestParam MultipartFile firstImage, @RequestParam MultipartFile secondImage, @RequestParam MultipartFile thirdImage) throws IOException {
+        System.out.println("Update product Before: " + product);
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        product.setSellerId(userService.findByUserName(auth.getName()).getUserId());
+        product.setProductId(id);
+        product.setSellerName(auth.getName());
+        System.out.println("Update product: " + product);
+
+        productService.updateProduct(product, coverImage, firstImage, secondImage, thirdImage);
+        return "redirect:/homepage";
     }
 }
