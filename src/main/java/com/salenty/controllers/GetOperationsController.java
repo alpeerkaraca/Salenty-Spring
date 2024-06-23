@@ -68,6 +68,11 @@ public class GetOperationsController {
         return "/homepage";
     }
 
+    @GetMapping("/")
+    public String homepage(Model model) {
+        return "redirect:/homepage";
+    }
+
     @GetMapping("/product/{id}")
     public String getProductDetail(@PathVariable("id") int id, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
