@@ -157,4 +157,43 @@ public class ProductService {
     public List<Product> getProductsByCategoryId(int categoryId) {
         return productRepository.findByCategory_CategoryId(categoryId);
     }
+
+    public void updateProduct(Product product, MultipartFile coverImage, MultipartFile firstImage, MultipartFile secondImage, MultipartFile thirdImage) throws IOException {
+        Product productFromDB = productRepository.findById(product.getProductId()).orElse(null);
+
+        if (productFromDB == null) {
+            return;
+        }
+
+        product.setProductId(productFromDB.getProductId());
+        product.setSellerId(productFromDB.getSellerId());
+        product.setSellerName(productFromDB.getSellerName());
+        product.setProductImage(productFromDB.getProductImage());
+        product.setProductImage1(productFromDB.getProductImage1());
+        product.setProductImage2(productFromDB.getProductImage2());
+        product.setProductImage3(productFromDB.getProductImage3());
+
+        if (!coverImage.isEmpty()) {
+            String coverImageUrl = uploadImage(coverImage);
+            System.out.println("Cover Image Yüklendi: " + coverImageUrl);
+            product.setProductImage(coverImageUrl);
+        }
+
+        if (!firstImage.isEmpty()) {
+            String imageUrl = uploadImage(firstImage);
+            product.setProductImage1(imageUrl);
+        }
+
+        if (!secondImage.isEmpty()) {
+            String imageUrl = uploadImage(secondImage);
+            product.setProductImage2(imageUrl);
+        }
+
+        if (!thirdImage.isEmpty()) {
+            String imageUrl = uploadImage(thirdImage);
+            product.setProductImage3(imageUrl);
+        }
+
+        productRepository.save(product);
+    }
 }

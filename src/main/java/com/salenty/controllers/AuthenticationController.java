@@ -30,8 +30,8 @@ public class AuthenticationController {
         return "redirect:/homepage";
     }
 
-    @PostMapping("update-user/{id}")
-    public String updateMe(@PathVariable String id, User user) {
+    @PostMapping("/user/edit/{id}")
+    public String updateUser(@PathVariable String id, User user) {
 
         User userFromDB = userService.getUserById(Integer.parseInt(id));
         user.setUserId(Integer.parseInt(id));
@@ -42,7 +42,7 @@ public class AuthenticationController {
         }
 
         userService.save(user);
-        return "redirect:/account/settings";
+        return "redirect:/account/users";
     }
 
     @PostMapping("update-me")
@@ -61,6 +61,8 @@ public class AuthenticationController {
         userService.save(user);
         return "redirect:/login?updated=true";
     }
+
+
 
 
 }

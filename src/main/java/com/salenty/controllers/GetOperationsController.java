@@ -174,6 +174,35 @@ public class GetOperationsController {
         return "redirect:/account/users";
     }
 
+    @GetMapping("/product/edit/{productId}")
+    public String updateProduct(@PathVariable("productId") int productId, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(productService.getProductById(productId).getSellerId() != userService.findByUserName(SecurityContextHolder.getContext().getAuthentication().getName()).getUserId()) {
+            return "redirect:/account/myproducts";
+        }
+
+        model.addAttribute("cartItemCount", cartItemRepository
+                .getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());
+
+        model.addAttribute("productId", productId);
+        model.addAttribute("product", productService.getProductById(productId));
+        model.addAttribute("categories", categoryService.getAllCategories());
+        model.addAttribute("role",userService.findByUserName(auth.getName()).getUserRole().toString());
+        return "update-product";
+    }
+
+    @GetMapping("/user/edit/{userId}")
+    public String updateUser(@PathVariable("userId") int userId, Model model) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        model.addAttribute("userId", userId);
+        model.addAttribute("user", userService.getUserById(userId));
+        model.addAttribute("cartItemCount", cartItemRepository
+                .getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());
+        model.addAttribute("section", "users");
+        model.addAttribute("role",userService.findByUserName(auth.getName()).getUserRole().toString());
+        return "update-user";
+    }
+
     @GetMapping("/product/delete/{productId}")
     public String deleteProduct(@PathVariable("productId") int productId) {
         productService.deleteProduct(productId);
