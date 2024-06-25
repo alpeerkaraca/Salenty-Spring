@@ -1,12 +1,14 @@
 package com.salenty.controllers;
 
-import com.salenty.model.User;
-import com.salenty.services.UserService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+
+import com.salenty.model.User;
+import com.salenty.services.UserService;
 
 @Controller
 public class AuthenticationController {
@@ -62,7 +64,13 @@ public class AuthenticationController {
         userService.save(user);
         return "redirect:/login?updated=true";
     }
-
+    
+    @PostMapping("/user/add")
+    public String addUser(User request) {
+        userService.save(request);
+        return "redirect:/account/users";
+    }
+    
 
 
 
