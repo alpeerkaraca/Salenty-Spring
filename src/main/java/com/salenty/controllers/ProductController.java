@@ -76,7 +76,6 @@ public class ProductController {
         product.setProductId(id);
         product.setSellerName(auth.getName());
         System.out.println("Update product: " + product);
-
         productService.updateProduct(product, coverImage, firstImage, secondImage, thirdImage);
         return "redirect:/homepage";
     }

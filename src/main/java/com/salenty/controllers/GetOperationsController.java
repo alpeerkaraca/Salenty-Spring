@@ -200,6 +200,7 @@ public class GetOperationsController {
     public String updateUser(@PathVariable("userId") int userId, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("userId", userId);
+        model.addAttribute("roles", Arrays.asList(Role.values()));
         model.addAttribute("user", userService.getUserById(userId));
         model.addAttribute("cartItemCount", cartItemRepository
                 .getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());

@@ -26,7 +26,9 @@ public class UserService implements UserDetailsService {
     public void save(User user) {
 
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        user.setUserRole(Role.valueOf("USER"));
+        if(user.getUserRole() == null)
+            user.setUserRole(Role.valueOf("USER"));
+
         userRepository.save(user);
     }
 

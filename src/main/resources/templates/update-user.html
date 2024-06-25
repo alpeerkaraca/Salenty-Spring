@@ -425,6 +425,28 @@
                                             </div>
 
                                             <div class="col-span-full">
+                                                <label for="role"
+                                                       class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">
+                                                    Kullanıcı Rolü
+                                                </label>
+                                                <div
+                                                        class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 sm:max-w-md"
+                                                >
+                                                    <select
+                                                            id="role"
+                                                            th:field="*{userRole}"
+                                                            class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-gray-500 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6"
+                                                    >
+                                                        <option th:each="role : ${roles}"
+                                                                th:value="${role}"
+                                                                th:text="${role}"></option>
+                                                    </select>
+                                                </div>
+
+
+                                            </div>
+
+                                            <div class="col-span-full">
                                                 <label
                                                         for="telNo"
                                                         class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5"
@@ -445,6 +467,7 @@
                                                     />
                                                 </div>
                                             </div>
+
 
                                             <div class="col-span-full">
                                                 <label
