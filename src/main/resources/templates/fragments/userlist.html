@@ -1,104 +1,126 @@
 <div th:fragment="content">
     <div class="px-4 sm:px-6 lg:px-8">
-        <div class="sm:flex sm:items-center">
+        <div class="sm:flex sm:items-center" id="header-section">
             <div class="sm:flex-auto">
-                <h1 class="text-base font-semibold leading-6 text-gray-900">
-                    Kullanıcılar
-                </h1>
-                <p class="mt-2 text-sm text-gray-700">
-                    Kayıtlı kullanıcıları görüntüleyin ve düzenleyin.
-                </p>
+                <h1 class="text-base font-semibold leading-6 text-gray-900">Kullanıcılar</h1>
+                <p class="mt-2 text-sm text-gray-700">Kayıtlı kullanıcıları görüntüleyin ve düzenleyin.</p>
+            </div>
+            <div class="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+                <button id="add-user-button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500">
+                    Ekle
+                </button>
             </div>
         </div>
-        <div class="-mx-4 mt-8 sm:-mx-0">
+
+        <!-- Kullanıcı Listesi -->
+        <div id="user-list" class="-mx-4 mt-8 sm:-mx-0">
             <table class="min-w-full divide-y divide-gray-300">
                 <thead>
-                <tr>
-                    <th
-                            scope="col"
-                            class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
-                    >
-                        Kullanıcı Adı
-                    </th>
-                    <th
-                            scope="col"
-                            class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
-                    >
-                        Adres
-                    </th>
-                    <th
-                            scope="col"
-                            class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell"
-                    >
-                        E-Posta
-                    </th>
-                    <th
-                            scope="col"
-                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                        Telefon
-                    </th>
-                    <th
-                            scope="col"
-                            class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
-                    >
-                        Rol
-                    </th>
-                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                        <span class="sr-only">Düzenle</span>
-                    </th>
-                    <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
-                        <span class="sr-only">Sil</span>
-                    </th>
-                </tr>
+                    <tr>
+                        <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0">Kullanıcı Adı</th>
+                        <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell">Adres</th>
+                        <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">E-Posta</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Telefon</th>
+                        <th scope="col" class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Rol</th>
+                        <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                            <span class="sr-only">Düzenle</span>
+                        </th>
+                        <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                            <span class="sr-only">Sil</span>
+                        </th>
+                    </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200 bg-white">
-                <tr th:each=" user : ${users}">
-                    <td
-                            class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
-                            th:text="${user.userName}"
-                    ></td>
-                    <td
-                            class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:table-cell"
-                            th:text="${user.userAddress}"
-                    ></td>
-                    <td
-                            class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell"
-                            th:text="${user.userEmail}"
-                    ></td>
-                    <td
-                            class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
-                            th:text="${user.userTel}"
-                    ></td>
-
-                    <td
-                            class="whitespace-nowrap px-3 py-4 text-sm text-gray-500"
-                            th:text="${user.userRole}"
-                    ></td>
-                    <td
-                            class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"
-                    >
-                        <a
-                                th:href="@{/user/edit/{id} (id=${user.userId})}"
-                                class="text-orange-600 hover:text-orange-900 transition duration-200 ease-in-out hover:transition hover:duration-200 hover:ease-in-out"
-                        >Düzenle<span class="sr-only"></span
-                        ></a>
-                    </td>
-                    <td
-                            class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0"
-                    >
-                        <a
-                                th:href="@{/user/delete/{id} (id=${user.userId})}"
-                                class="text-orange-600 hover:text-orange-900 delete-button transition duration-200 ease-in-out hover:transition hover:duration-200 hover:ease-in-out"
-                        >Sil<span class="sr-only"></span
-                        ></a>
-                    </td>
-                </tr>
+                    <tr th:each="user : ${users}">
+                        <td class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0" th:text="${user.username}"></td>
+                        <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 sm:table-cell" th:text="${user.userAddress}"></td>
+                        <td class="hidden whitespace-nowrap px-3 py-4 text-sm text-gray-500 lg:table-cell" th:text="${user.userEmail}"></td>
+                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" th:text="${user.userTel}"></td>
+                        <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500" th:text="${user.userRole}"></td>
+                        <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                            <a th:href="@{/user/edit/{id} (id=${user.userId})}" class="text-orange-600 hover:text-orange-900 transition duration-200 ease-in-out hover:transition hover:duration-200 hover:ease-in-out">Düzenle</a>
+                        </td>
+                        <td class="whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0">
+                            <a th:href="@{/user/delete/{id} (id=${user.userId})}" class="text-orange-600 hover:text-orange-900 delete-button transition duration-200 ease-in-out hover:transition hover:duration-200 hover:ease-in-out">Sil</a>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
+
+        <!-- Kullanıcı Ekleme Formu -->
+        <div id="add-user-form" class="hidden mt-8">
+            <div>
+                <div class="xl:pl-5">
+                    <main>
+                        <!-- Kullanıcı Ekleme Formu -->
+                        <div class="divide-y divide-white/5">
+                            <div class="grid max-w-7xl grid-cols-1 gap-x-8 gap-y-10 px-4 py-16 sm:px-6 md:grid-cols-3 lg:px-8">
+                                <div>
+                                    <h2 class="text-base font-semibold leading-7 text-gray-900">Kullanıcı Ekle</h2>
+                                    <p class="mt-1 max-w-2xl text-sm leading-6 text-gray-600">Doğrulama için kullanılacağından gerçek bilgilerinizi giriniz.</p>
+                                </div>
+                                <form class="md:col-span-2" autocomplete="off" th:action="@{/user/add}" method="post">
+                                    <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
+                                        <div class="col-span-full">
+                                            <label for="userName" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">Kullanıcı Adı</label>
+                                            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 sm:max-w-md">
+                                                <input id="userName" name="username" type="text" required class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-gray-500 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6" />
+                                            </div>
+                                        </div>
+                                        <div class="col-span-full">
+                                            <label for="email" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">E-Posta Adresi</label>
+                                            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 sm:max-w-md">
+                                                <input id="email" name="userEmail" type="email" required class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-gray-500 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6" />
+                                            </div>
+                                        </div>
+                                        <div class="col-span-full">
+                                            <label for="role" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">Kullanıcı Rolü</label>
+                                            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 sm:max-w-md">
+                                                <select id="role" name="userRole" required class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-gray-500 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6">
+                                                    <option value="USER">USER</option>
+                                                    <option value="ADMIN">ADMIN</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-span-full">
+                                            <label for="telNo" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">Telefon Numarası</label>
+                                            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 sm:max-w-md">
+                                                <input id="telNo" name="userTel" type="tel" required maxlength="11" minlength="11" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-gray-500 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6" />
+                                            </div>
+                                        </div>
+                                        <div class="col-span-full">
+                                            <label for="address" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">Adres</label>
+                                            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 sm:max-w-md">
+                                                <input id="address" name="userAddress" type="text" required class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-gray-500 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6" />
+                                            </div>
+                                        </div>
+                                        <div class="col-span-full">
+                                            <label for="userpassword" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">Parola</label>
+                                            <div class="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 sm:max-w-md">
+                                                <input id="userpassword" name="password" type="password" required placeholder="***********************" class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-gray-500 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-orange-500 sm:text-sm sm:leading-6" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mt-8 flex">
+                                        <button type="submit" class="rounded-md bg-orange-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-500">Kaydet</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
     </div>
+
     <script>
+        document.getElementById('add-user-button').addEventListener('click', function () {
+            document.getElementById('header-section').style.display = 'none';
+            document.getElementById('user-list').style.display = 'none';
+            document.getElementById('add-user-form').style.display = 'block';
+        });
+
         document.querySelectorAll('.delete-button').forEach(function (button) {
             button.addEventListener('click', function (event) {
                 event.preventDefault();
@@ -109,4 +131,3 @@
         });
     </script>
 </div>
-
