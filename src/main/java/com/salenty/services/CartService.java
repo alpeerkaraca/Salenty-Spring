@@ -73,4 +73,8 @@ public class CartService {
         System.out.println("Cart Total: " + total);
         return total;
     }
+
+    public void deleteCartByUser(User userById) {
+        cartRepository.deleteByUser(userById);
+    }
 }

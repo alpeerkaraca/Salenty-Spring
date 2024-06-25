@@ -3,6 +3,8 @@ package com.salenty.controllers;
 import java.io.IOException;
 import java.util.List;
 
+import com.salenty.repositories.CartItemRepository;
+import com.salenty.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +27,10 @@ public class ProductController {
 
     @Autowired
     private CategoryService categoryService;
+    @Autowired
+    private CartItemRepository cartItemRepository;
+    @Autowired
+    private CartService cartService;
 
     public ProductController(ProductService productService, UserService userService) {
         this.productService = productService;
@@ -47,6 +53,9 @@ public class ProductController {
 
         // Add categories to the model
         List<Category> categories = categoryService.getAllCategories();
+        model.addAttribute("cartItemCount", cartItemRepository
+                .getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());
+        model.addAttribute("role", userService.findByUserName(auth.getName()).getUserRole().toString());
         model.addAttribute("categories", categories);
         model.addAttribute("username", auth.getName());
 
@@ -61,6 +70,9 @@ public class ProductController {
         model.addAttribute("products", products);
 
         List<Category> categories = categoryService.getAllCategories();
+        model.addAttribute("role", userService.findByUserName(auth.getName()).getUserRole().toString());
+        model.addAttribute("cartItemCount", cartItemRepository
+                .getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());
         model.addAttribute("username", auth.getName());
         model.addAttribute("categories", categories);
         model.addAttribute("selectedCategory", categoryId);

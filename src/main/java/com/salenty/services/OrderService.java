@@ -50,4 +50,18 @@ public class OrderService {
         orderRepository.deleteById(orderId);
 
     }
+
+    public void deleteOrdersByUserId(int userId) {
+        List<Order> orders = orderRepository.findOrdersByBuyer(userRepository.findUserByUserId(userId));
+        for (Order order : orders) {
+            orderRepository.deleteById(order.getOrderId());
+        }
+    }
+
+    public void deleteOrdersByBuyer(User userById) {
+        List<Order> orders = orderRepository.findOrdersByBuyer(userById);
+        for (Order order : orders) {
+            orderRepository.deleteById(order.getOrderId());
+        }
+    }
 }

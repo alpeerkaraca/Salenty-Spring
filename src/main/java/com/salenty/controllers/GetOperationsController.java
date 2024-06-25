@@ -4,6 +4,7 @@ import com.salenty.model.*;
 import com.salenty.repositories.CartItemRepository;
 import com.salenty.repositories.ProductRepository;
 import com.salenty.services.*;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -59,7 +60,7 @@ public class GetOperationsController {
         for (int i = 0; i < products.size() && i < 13; i++) {
             productsWillSend.add(products.get(i));
         }
-
+        model.addAttribute("role", userService.findByUserName(auth.getName()).getUserRole().toString());
         model.addAttribute("username", auth.getName());
         model.addAttribute("products", productsWillSend);
         model.addAttribute("categories", categoryService.getAllCategories());
@@ -81,6 +82,7 @@ public class GetOperationsController {
 
         if (product != null) {
             model.addAttribute("product", product);
+            model.addAttribute("role", userService.findByUserName(auth.getName()).getUserRole().toString());
             model.addAttribute("categories", categoryService.getAllCategories());
             model.addAttribute("username", auth.getName());
             model.addAttribute("cartItemCount", cartItemRepository
@@ -105,6 +107,7 @@ public class GetOperationsController {
                     productsInCart.add(productRepository.findById(item.getProductId()).get());
                 }
             });
+            model.addAttribute("role", userService.findByUserName(auth.getName()).getUserRole().toString());
             model.addAttribute("total", cartService.calculateTotal(cartService.getCartByUser(user)));
             model.addAttribute("items", cartService.getCartByUser(user).getItems());
             model.addAttribute("productsInCart", productsInCart);
@@ -120,6 +123,7 @@ public class GetOperationsController {
     public String account(@PathVariable("section") String section, Model model) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         model.addAttribute("user", auth.getName());
+        model.addAttribute("role", userService.findByUserName(auth.getName()).getUserRole().toString());
         model.addAttribute("cartItemCount", cartItemRepository
                 .getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());
         model.addAttribute("role", userService.findByUserName(auth.getName()).getUserRole().toString());
@@ -172,10 +176,13 @@ public class GetOperationsController {
         return "account";
     }
 
+    @Transactional
     @GetMapping("/user/delete/{userId}")
     public String deleteUser(@PathVariable("userId") int userId) {
-        userService.deleteUser(userId);
+        cartService.deleteCartByUser(userService.getUserById(userId));
+        orderService.deleteOrdersByBuyer(userService.getUserById(userId));
         productService.deleteProductsByUserId(userId);
+        userService.deleteUser(userId);
         return "redirect:/account/users";
     }
 
@@ -217,6 +224,7 @@ public class GetOperationsController {
 
     @GetMapping("/checkout")
     public String checkout(Model model) {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findByUserName(auth.getName());
         List<Product> productsInCart = new ArrayList<>();
@@ -226,6 +234,8 @@ public class GetOperationsController {
                 productsInCart.add(productRepository.findById(item.getProductId()).get());
             }
         });
+        model.addAttribute("role", userService.findByUserName(auth.getName()).getUserRole().toString());
+
         model.addAttribute("cartItemCount", cartItemRepository.getCartItemsByCart(cartService.getCartByUser(userService.findByUserName(auth.getName()))).size());
         model.addAttribute("userInfo", user);
         model.addAttribute("username", auth.getName());
