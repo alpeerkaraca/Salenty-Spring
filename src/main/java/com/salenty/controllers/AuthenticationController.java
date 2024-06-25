@@ -1,6 +1,5 @@
 package com.salenty.controllers;
 
-import com.salenty.model.Role;
 import com.salenty.model.User;
 import com.salenty.services.UserService;
 import org.springframework.security.core.Authentication;
@@ -43,7 +42,6 @@ public class AuthenticationController {
         if (user.getPassword().isEmpty()) {
             user.setPassword(userFromDB.getPassword());
         }
-        System.out.println("User: " + user.toString());
         userService.save(user);
         return "redirect:/account/users";
     }

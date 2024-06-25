@@ -69,7 +69,7 @@ public class GetOperationsController {
     }
 
     @GetMapping("/")
-    public String homepage(Model model) {
+    public String homepage() {
         return "redirect:/homepage";
     }
 
