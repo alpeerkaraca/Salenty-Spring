@@ -1,9 +1,13 @@
 package com.salenty.services;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
 import com.salenty.repositories.CartItemRepository;
+import net.coobird.thumbnailator.Thumbnails;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -71,7 +75,6 @@ public class ProductService {
         product.getCategory().setCategoryName(categoryService.getCategoryById(product.getCategory().getCategoryId()));
 
 
-
         if (!coverImage.isEmpty()) {
             String coverImageUrl = uploadImage(coverImage);
             System.out.println("Cover Image Yüklendi: " + coverImageUrl);
@@ -122,16 +125,38 @@ public class ProductService {
     }
 
 
-    private String uploadImage(MultipartFile image) throws IOException {
+    public String uploadImage(MultipartFile image) throws IOException {
         String uploadUrl = "https://api.imgbb.com/1/upload";
         RestTemplate restTemplate = new RestTemplate();
+
+        // Resize the image to fit within a 1200x1200 square, then pad it to be exactly 1200x1200
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        Thumbnails.of(image.getInputStream())
+                .size(1200, 1200)
+                .keepAspectRatio(true)
+                .outputFormat("jpg")
+                .addFilter((img) -> {
+                    int width = img.getWidth(null);
+                    int height = img.getHeight(null);
+                    int maxDim = Math.max(width, height);
+                    BufferedImage squareImage = new BufferedImage(maxDim, maxDim, BufferedImage.TYPE_INT_ARGB);
+                    Graphics2D g2 = squareImage.createGraphics();
+                    g2.setColor(Color.WHITE);
+                    g2.fillRect(0, 0, maxDim, maxDim);
+                    g2.drawImage(img, (maxDim - width) / 2, (maxDim - height) / 2, null);
+                    g2.dispose();
+                    return squareImage;
+                })
+                .toOutputStream(outputStream);
+
+        byte[] resizedImageBytes = outputStream.toByteArray();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("key", IMGBB_API_KEY);
-        body.add("image", new ByteArrayResource(image.getBytes()) {
+        body.add("image", new ByteArrayResource(resizedImageBytes) {
             @Override
             public String getFilename() {
                 return image.getOriginalFilename();
@@ -139,8 +164,7 @@ public class ProductService {
         });
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-        ResponseEntity<String> response = restTemplate.exchange(uploadUrl, HttpMethod.POST, requestEntity,
-                String.class);
+        ResponseEntity<String> response = restTemplate.exchange(uploadUrl, HttpMethod.POST, requestEntity, String.class);
 
         JSONObject jsonObject = new JSONObject(response.getBody());
         System.out.println(jsonObject);
@@ -154,6 +178,7 @@ public class ProductService {
     public List<Product> searchProductsByName(String name) {
         return productRepository.findByProductNameContainingIgnoreCase(name);
     }
+
     public List<Product> getProductsByCategoryId(int categoryId) {
         return productRepository.findByCategory_CategoryId(categoryId);
     }
